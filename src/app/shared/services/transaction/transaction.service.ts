@@ -16,7 +16,9 @@ import { RequestBody } from '../../models/transaction/requestbody';
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionService implements TransactionManager {
+export class TransactionService implements TransactionManager, Organization {
+  orgCode: String;
+  orgTitle: String;
   private readonly _logger: LoggerService;
   private readonly _tokenManager: TokenmanagerService;
   /**
@@ -27,6 +29,7 @@ export class TransactionService implements TransactionManager {
   constructor(private urlmanager: UrlmanagerService, private http: HttpClient, logger: LoggerService, tokenmanager: TokenmanagerService) {
   this._logger = logger;
     this._logger.Log('Instantiating TransactionService', Loglevel.Info);
+    this._tokenManager = tokenmanager;
   }
 
   private transactions: Transaction[];
@@ -60,11 +63,11 @@ export class TransactionService implements TransactionManager {
 
   }
   private setOrganization(orgCode: String) {
-    this._organization.orgCode = orgCode;
+    this.orgCode = orgCode;
   }
 
   private getWebToken() {
-    this._jwtCode = this._tokenManager.getToken(this._organization);
+    this._jwtCode = this._tokenManager.getToken(this.orgCode);
   }
 
  private submitEligibility(transaction: EligibilityTransaction): any {
@@ -77,6 +80,7 @@ export class TransactionService implements TransactionManager {
    .set('Content-Type', 'application/json');
 
     // Construct the request body
+    this.requestBody = new RequestBody();
     this.requestBody.peers = ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
     this.requestBody.fcn = 'CreateF3Request';
     this.requestBody.args = [ {
@@ -121,10 +125,10 @@ export class TransactionService implements TransactionManager {
     // log
 
     const Url = 'Url: ' + this.urlmanager.submitEligibility.toString();
-    const RequestBody = 'Request Body: ' + JSON.stringify(this.requestBody);
+    const reqBody = 'Request Body: ' + JSON.stringify(this.requestBody);
     const Headers = 'Request Headers: ' + this.headers;
     this._logger.Log( Url, Loglevel.Info);
-    this._logger.Log(RequestBody, Loglevel.Info);
+    this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);
     this.http.post(this.urlmanager.submitEligibility.toString(), this.requestBody, { headers: this.headers } );
   }
