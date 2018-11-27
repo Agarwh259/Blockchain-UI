@@ -1,0 +1,20 @@
+<div id="login" class="login-container">
+  <header>LOGIN </header>
+  <fieldset>
+    <form  #f="ngForm" (ngSubmit)="login(f.value)" >
+      <div class="input-wrapper">
+          <input type="text" placeholder="username"
+          id="username"
+          name="username" ngModel #username="ngModel" required
+          />
+      </div>
+      <div class="input-wrapper">
+          <input type="password" placeholder="password" 
+          id="password"
+          name="password" ngModel #password="ngModel" required/>
+      </div>
+      <button id="continue" type="submit" [disabled]="!f.valid"
+      style="cursor: pointer;">Login</button>
+  </form>
+  </fieldset>
+</div>

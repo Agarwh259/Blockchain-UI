@@ -1,0 +1,82 @@
+
+
+.login-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 470px;
+  border-radius: 3px;
+  background-color: #ffff;
+  overflow: hidden;
+  .denied & {
+    animation: shake 0.35s normal forwards ease-in-out;
+  }
+  fieldset {
+    border: none;
+  }
+  header {
+    background-color:white;
+    color: black;
+    display: block;
+    padding: 1.5em;
+    text-align: center;
+  }
+  .input-wrapper {
+    position: relative;
+    display: block;
+    margin: 2em auto;
+    border-radius: 3px;
+    width: 370px;
+    padding-left: 20px;
+    input {
+      width: 100%;
+      line-height: 2;
+      border: none;
+      padding: .6em .5em;
+      outline: 0;
+      background: black;
+      color: white;
+    }
+}
+  button {
+    outline: 0;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    background-color: #8BC34A;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    width: 200px;
+    padding: 1.2em 0;
+    margin: 4em auto;
+    display: block;
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    &:hover {
+      border-bottom-color: darken(#8BC34A, 25);
+    }
+    &:disabled{
+        background-color: #576348!important;
+    }
+  }
+}
+
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948!important; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442!important; /* red */
+  }
+
+@keyframes shake {
+  0% { margin-left: 0 }
+  12% { margin-left: 0 }
+  25% { margin-left: -10px }
+  50% { margin-left: 10px }
+  75% { margin-left: -10px }
+  87% { margin-left: 0 }
+  100% { margin-left: 0 }
+}

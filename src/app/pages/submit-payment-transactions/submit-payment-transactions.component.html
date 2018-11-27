@@ -1,0 +1,150 @@
+<div class="container">
+  <form name="paymentForm" #f="ngForm" (ngSubmit)="f.form.valid && submitPaymentTransaction(paymentEntity)">
+    <div class="row col-md-12">
+        <div class="col-md-6 row">
+            <label for="transactionId" class="col-md-5 control-label" style="margin-top:1%">Transaction Id</label>
+            <input required readonly type="text" name="transactionId" [(ngModel)]="paymentEntity.transactionId" class="form-control col-md-7"
+              #transactionIdControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && transactionIdControl.invalid }">
+              <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && transactionIdControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="transactionIdControl.errors.required">Transaction type is required</div>
+              </span>
+          </div>
+      <div class="col-md-6 row">
+
+      </div>
+
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+        <div class="col-md-6 row">
+            <label for="transactionType" class="col-md-5 control-label" style="margin-top:1%">Transaction Type</label>
+            <input readonly required type="text" class="form-control col-md-7" name="transactionType" [(ngModel)]="paymentEntity.transactionType"
+              #transactionTypeControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && transactionTypeControl.invalid }">
+            <span class="col-md-5"></span>
+            <span *ngIf="f.submitted && transactionTypeControl.invalid" class="col-md-7 invalid-feedback">
+              <div *ngIf="transactionTypeControl.errors.required">Transaction type is required</div>
+            </span>
+          </div>
+          <div class="col-md-6 row">
+              <label for="caseNumber" class="col-md-5 control-label" style="margin-top:1%">Case Number</label>
+              <input required minlength="9" maxlength="9" type="text" class="form-control col-md-7" name="caseNumber"
+                [(ngModel)]="paymentEntity.caseNumber" #caseNumberControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && caseNumberControl.invalid }">
+              <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && caseNumberControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="caseNumberControl.errors.required">Case Number is required</div>
+                <div *ngIf="caseNumberControl.errors.maxlength">Case Number should be of 9 digits</div>
+                <div *ngIf="caseNumberControl.errors.minlength">Case Number should be of 9 digits</div>
+              </span>
+            </div>
+
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+        <div class="col-md-6 row">
+            <label for="coverageMonth" class="col-md-5 control-label" style="margin-top:1%">Coverage Month</label>
+            <input required type="date" class="form-control col-md-7" name="coverageMonth" [(ngModel)]="paymentEntity.coverageMonth"
+              #coverageMonthControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && coverageMonthControl.invalid }">
+            <span class="col-md-5"></span>
+            <span *ngIf="f.submitted && coverageMonthControl.invalid" class="col-md-7 invalid-feedback">
+              <div *ngIf="coverageMonthControl.errors.required">Coverage month is required</div>
+            </span>
+          </div>
+          <div class="col-md-6 row">
+              <label for="issuerId" class="col-md-5 control-label" style="margin-top:1%">Issuer Id</label>
+      
+              <select required class="form-control col-md-7" name="issuerId" [(ngModel)]="paymentEntity.issuerId"
+                #issuerIdControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && issuerIdControl.invalid }">
+                <option *ngFor="let item of issuerList" [value]="item.id">
+                  {{item.value}}
+                </option>
+              </select>
+              <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && issuerIdControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="issuerIdControl.errors.required">Issuer id is required</div>
+              </span>
+            </div>
+
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+        <div class="col-md-6 row">
+            <label for="invoiceDate" class="col-md-5 control-label" style="margin-top:1%">Invoice Date</label>
+            <input required type="date" class="form-control col-md-7" name="invoiceDate" [(ngModel)]="paymentEntity.invoiceDate"
+              #invoiceDateControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && invoiceDateControl.invalid }">
+            <span class="col-md-5"></span>
+            <span *ngIf="f.submitted && invoiceDateControl.invalid" class="col-md-7 invalid-feedback">
+              <div *ngIf="invoiceDateControl.errors.required">Invoice Date is required</div>
+            </span>
+          </div>
+          <div class="col-md-6 row">
+              <label for="dueDate" class="col-md-5 control-label" style="margin-top:1%">Due Date</label>
+              <input required type="date" class="form-control col-md-7" name="dueDate" [(ngModel)]="paymentEntity.dueDate"
+                #dueDateControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && dueDateControl.invalid }">
+              <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && dueDateControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="dueDateControl.errors.required">Due Date is required</div>
+              </span>
+            </div>
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+        <div class="col-md-6 row">
+            <label for="premiumAmount" class="col-md-5 control-label" style="margin-top:1%">Premium Amount</label>
+            <input required type="text" class="form-control col-md-7" name="premiumAmount" [(ngModel)]="paymentEntity.premiumAmount"
+              #premiumAmountControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && premiumAmountControl.invalid }">
+            <span class="col-md-5"></span>
+            <span *ngIf="f.submitted && premiumAmountControl.invalid" class="col-md-7 invalid-feedback">
+              <div *ngIf="premiumAmountControl.errors.required">Premium amount is required</div>
+            </span>
+          </div>
+          <div class="col-md-6 row">
+              <label for="paymentStatus" class="col-md-5 control-label" style="margin-top:1%">Payment Status</label>
+               <select required class="form-control col-md-7" name="paymentStatus" [(ngModel)]="paymentEntity.paymentStatus"
+                #paymentStatusControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && paymentStatusControl.invalid }">
+                <option *ngFor="let item of paymentStatus" [value]="item.id">
+                  {{item.value}}
+                </option>
+              </select>
+                <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && paymentStatusControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="paymentStatusControl.errors.required">Payment status is required</div>
+              </span>
+            </div>
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+      <div class="col-md-6 row">
+        <label for="paymentDate" class="col-md-5 control-label" style="margin-top:1%">Payment Date</label>
+        <input required name="paymentDate" type="date" class="form-control col-md-7"
+        [(ngModel)]="paymentEntity.paymentDate" #paymentDateControl="ngModel"
+        [ngClass]="{ 'is-invalid': f.submitted && paymentDateControl.invalid }">
+        <span class="col-md-5"></span>
+        <span *ngIf="f.submitted && paymentDateControl.invalid" class="col-md-7 invalid-feedback">
+          <div *ngIf="paymentDateControl.errors.required">Payment date is required</div>
+        </span>
+      </div>
+      <div class="col-md-6 row">
+          <label for="processedByIEES" class="col-md-5 control-label" style="margin-top:1%">Processed By IEES</label>
+          <select required class="form-control col-md-7" name="processedByIEES" [(ngModel)]="paymentEntity.processedByIEES"
+            #processedByIEESControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && processedByIEESControl.invalid }">
+            <option *ngFor="let item of processingStatus" [value]="item.id">
+              {{item.value}}
+            </option>
+          </select>
+          <span class="col-md-5"></span>
+          <span *ngIf="f.submitted && processedByIEESControl.invalid" class="col-md-7 invalid-feedback">
+            <div *ngIf="processedByIEESControl.errors.required">Field is required</div>
+          </span>
+        </div>
+    </div>
+
+    <div class="row col-md-12" style="margin-top: 10px">
+      <div class="col-md-6 row">
+      </div>
+      <div class="col-md-6 row">
+        <label class="col-md-5" style="margin-top:1%"></label>
+        <button type="submit" class="btn btn-info col-md-4">Submit</button>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<hr>

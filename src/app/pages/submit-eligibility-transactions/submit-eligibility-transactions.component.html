@@ -1,0 +1,482 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+   <li class="nav-item">
+      <a class="nav-link" [ngClass]="{'active':currentTab === 'basic'}" id="basic-tab" role="tab" aria-controls="basic"
+         aria-selected="true">Basic Info</a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link" [ngClass]="{'active':currentTab === 'elg'}" id="elg-tab" role="tab" aria-controls="elg"
+         aria-selected="false">Eligibility Info</a>
+   </li>
+   <li class="nav-item">
+      <a class="nav-link" [ngClass]="{'active':currentTab === 'kyh'}" id="kyh-tab" role="tab" aria-controls="kyh"
+         aria-selected="false">KYH Info</a>
+   </li>
+</ul>
+<br />
+<div class="tab-content" id="myTabContent">
+   <div class="tab-pane fade" [ngClass]="{'show active':currentTab === 'basic'}" id="basic" role="tabpanel"
+      aria-labelledby="basic-tab">
+      <div class="container">
+         <form name="basicInfoForm" #f1="ngForm" (ngSubmit)="f1.valid && submitBasicInfo(eligibilityEntity)">
+            <div class="row col-md-12">
+               <div class="col-md-6 row">
+                  <label for="transactionId" class="col-md-5 control-label" style="margin-top:1%">Transaction Id</label>
+                  <input required readonly type="text" name="transactionId" [(ngModel)]="eligibilityEntity.transactionId"
+                     class="form-control col-md-6" #transactionIdControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && transactionIdControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && transactionIdControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="transactionIdControl.errors.required">Transaction Id is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="transactionType" class="col-md-5 control-label" style="margin-top:1%">Transaction Type</label>
+                  <input readonly required type="text" class="form-control col-md-6" name="transactionType" [(ngModel)]="eligibilityEntity.transactionType"
+                     #transactionTypeControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && transactionTypeControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && transactionTypeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="transactionTypeControl.errors.required">Transaction type is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="caseNumber" class="col-md-5 control-label" style="margin-top:1%">Case Number</label>
+                  <input required minlength="9" maxlength="9" type="text" class="form-control col-md-6" name="caseNumber"
+                     [(ngModel)]="eligibilityEntity.caseNumber" #caseNumberControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && caseNumberControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && caseNumberControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="caseNumberControl.errors.required">Case Number is required</div>
+                     <div *ngIf="caseNumberControl.errors.maxlength">Case Number should be of 9 length</div>
+                     <div *ngIf="caseNumberControl.errors.minlength">Case Number should be of 9 length</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="maidCardNumber" class="col-md-5 control-label" style="margin-top:1%">Maidcard Number</label>
+                  <input required minlength="10" maxlength="10" type="text" class="form-control col-md-6" name="maidCardNumber"
+                     [(ngModel)]="eligibilityEntity.maidCardNumber" #maidCardNumberControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && maidCardNumberControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && maidCardNumberControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="maidCardNumberControl.errors.required">Maidcard Numbmer is required</div>
+                     <div *ngIf="maidCardNumberControl.errors.maxlength">Maidcard Number should be of 10 length</div>
+                     <div *ngIf="maidCardNumberControl.errors.minlength">Maidcard Number should be of 10 length</div>
+                  </span>
+               </div>
+
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="ssn" class="col-md-5 control-label" style="margin-top:1%">SSN</label>
+                  <input required minlength="9" maxlength="9" type="text" class="form-control col-md-6" name="ssn"
+                     [(ngModel)]="eligibilityEntity.ssn" #ssnControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && ssnControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && ssnControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="ssnControl.errors.required">SSN is required</div>
+                     <div *ngIf="ssnControl.errors.maxlength">SSN should be of 9 length</div>
+                     <div *ngIf="ssnControl.errors.minlength">SSN should be of 9 length</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="firstName" class="col-md-5 control-label" style="margin-top:1%">First Name</label>
+                  <input required type="text" maxlength="20" class="form-control col-md-6" name="firstName" [(ngModel)]="eligibilityEntity.firstName"
+                     #firstNameControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && firstNameControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && firstNameControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="firstNameControl.errors.required">First Name is required</div>
+                     <div *ngIf="firstNameControl.errors.maxlength">First Name should be of 20 length</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="lastName" class="col-md-5 control-label" style="margin-top:1%">Last Name</label>
+                  <input required type="text" maxlength="20" class="form-control col-md-6" name="lastName" [(ngModel)]="eligibilityEntity.lastName"
+                     #lastNameControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && lastNameControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && lastNameControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="lastNameControl.errors.required">Last Name is required</div>
+                     <div *ngIf="lastNameControl.errors.maxlength">Last Name should be of 20 length</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="dateOfBirth" class="col-md-5 control-label" style="margin-top:1%">BirthDate</label>
+                  <input required type="date" class="form-control col-md-6" name="dateOfBirth" [(ngModel)]="eligibilityEntity.dateOfBirth"
+                     #dateOfBirthControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && dateOfBirthControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && dateOfBirthControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="dateOfBirthControl.errors.required">Birth Date is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="gender" class="col-md-5 control-label" style="margin-top:1%">Gender</label>
+                  <select required class="form-control col-md-6" name="gender" [(ngModel)]="eligibilityEntity.gender"
+                     #genderControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && genderControl.invalid }">
+                     <option *ngFor="let item of genderStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && genderControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="genderControl.errors.required">Field is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="address" class="col-md-5 control-label" style="margin-top:1%">Address</label>
+                  <input type="text" maxlength="50" required class="form-control col-md-6" name="address" [(ngModel)]="eligibilityEntity.addressLine"
+                     #addressControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && addressControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && addressControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="addressControl.errors.required">Address is required</div>
+                     <div *ngIf="addressControl.errors.maxlength">Address should be of 20 length</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="city" class="col-md-5 control-label" style="margin-top:1%">City</label>
+                  <input type="text" maxlength="20" required class="form-control col-md-6" name="city" [(ngModel)]="eligibilityEntity.city"
+                     #cityControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && cityControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && cityControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="cityControl.errors.required">City is required</div>
+                     <div *ngIf="cityControl.errors.maxlength">City should be of 20 length</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="state" class="col-md-5 control-label" style="margin-top:1%">State Code</label>
+                  <input type="text" maxlength="2" required class="form-control col-md-6" name="city" [(ngModel)]="eligibilityEntity.stateCode"
+                     #stateControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && stateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && stateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="stateControl.errors.required">State code is required</div>
+                     <div *ngIf="stateControl.errors.maxlength">State code should be of 2 characters</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="zip" class="col-md-5 control-label" style="margin-top:1%">ZIP</label>
+                  <input type="text" maxlength="5" minlength="5" required class="form-control col-md-6" name="zip"
+                     [(ngModel)]="eligibilityEntity.zipCode" #zipControl="ngModel" [ngClass]="{ 'is-invalid': f1.submitted && zipControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f1.submitted && zipControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="zipControl.errors.required">ZIP is required</div>
+                     <div *ngIf="zipControl.errors.maxlength">ZIP should be of 5 digits</div>
+                     <div *ngIf="zipControl.errors.minlength">ZIP should be of 5 digits</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+
+               </div>
+               <div class="col-md-6 row">
+                  <div class="col-md-5"></div>
+                  <div class="col-md-6">
+                     <button type="submit" class="btn btn-info offset-md-9">Next</button>
+                  </div>
+
+               </div>
+            </div>
+
+         </form>
+      </div>
+      <hr>
+   </div>
+   <div class="tab-pane fade" [ngClass]="{'show active':currentTab === 'elg'}" id="elg" role="tabpanel" aria-labelledby="elg-tab">
+      <div class="container">
+         <form name="elgInfoForm" #f2="ngForm" (ngSubmit)="f2.valid && submitElgInfo(eligibilityEntity)">
+            <div class="row col-md-12">
+               <div class="col-md-6 row">
+                  <label for="caseCountableIncome" class="col-md-5 control-label" style="margin-top:1%">Case
+                     Countable Income</label>
+                  <input required type="text" class="form-control col-md-6" name="caseCountableIncome" [(ngModel)]="eligibilityEntity.caseCountableIncome"
+                     #caseCountableIncomeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && caseCountableIncomeControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && caseCountableIncomeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="caseCountableIncomeControl.errors.required">Income is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="programCode" class="col-md-5 control-label" style="margin-top:1%">Program Code</label>
+                  <input type="text" maxlength="2" required class="form-control col-md-6" name="programCode"
+                     [(ngModel)]="eligibilityEntity.programCode" #programCodeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && programCodeControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && programCodeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="programCodeControl.errors.required">Program Code is required</div>
+                     <div *ngIf="programCodeControl.errors.maxlength">Program Code should be of 2 characters</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="statusCode" class="col-md-5 control-label" style="margin-top:1%">Status Code</label>
+                  <input type="text" maxlength="2" required class="form-control col-md-6" name="statusCode" [(ngModel)]="eligibilityEntity.statusCode"
+                     #statusCodeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && statusCodeControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && statusCodeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="statusCodeControl.errors.required">Status Code is required</div>
+                     <div *ngIf="statusCodeControl.errors.maxlength">Status Code should be of 2 characters</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="imidCode" class="col-md-5 control-label" style="margin-top:1%">IMID Code</label>
+                  <input type="text" maxlength="2" required class="form-control col-md-6" name="imidCode" [(ngModel)]="eligibilityEntity.imidCode"
+                     #iMIDCodeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && iMIDCodeControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && iMIDCodeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="iMIDCodeControl.errors.required">IMID Code is required</div>
+                     <div *ngIf="iMIDCodeControl.errors.maxlength">IMID Code should be of 2 characters</div>
+                  </span>
+               </div>
+
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="eligibilityStartDate" class="col-md-5 control-label" style="margin-top:1%">Eligibility
+                     Start Date</label>
+                  <input required type="date" class="form-control col-md-6" name="eligibilityStartDate" [(ngModel)]="eligibilityEntity.eligibilityStartDate"
+                     #eligibilityStartDateControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && eligibilityStartDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && eligibilityStartDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="eligibilityStartDateControl.errors.required">Date is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="eligibilityEndDate" class="col-md-5 control-label" style="margin-top:1%">Eligibility End
+                     Date</label>
+                  <input required type="date" class="form-control col-md-6" name="eligibilityEndDate" [(ngModel)]="eligibilityEntity.eligibilityEndDate"
+                     #eligibilityEndDateControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && eligibilityEndDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && eligibilityEndDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="eligibilityEndDateControl.errors.required">Date is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="enrollmentStartDate" class="col-md-5 control-label" style="margin-top:1%">Enrollment
+                     Start Date</label>
+                  <input required type="date" class="form-control col-md-6" name="enrollmentStartDate" [(ngModel)]="eligibilityEntity.enrollmentStartDate"
+                     #enrollmentStartDateControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && enrollmentStartDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && enrollmentStartDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="enrollmentStartDateControl.errors.required">Enrollment start date is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="enrollmentEndDate" class="col-md-5 control-label" style="margin-top:1%">Enrollmemnt End
+                     Date</label>
+                  <input required type="date" class="form-control col-md-6" name="enrollmentEndDate" [(ngModel)]="eligibilityEntity.enrollmentEndDate"
+                     #enrollmentEndDateControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && enrollmentEndDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && enrollmentEndDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="enrollmentEndDateControl.errors.required">Enrollment end date is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="issuerId" class="col-md-5 control-label" style="margin-top:1%">Issuer</label>
+                  <select required class="form-control col-md-6" name="issuerId" [(ngModel)]="eligibilityEntity.issuerId"
+                     #issuerIdControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && issuerIdControl.invalid }">
+                     <option *ngFor="let item of issuerList" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && issuerIdControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="issuerIdControl.errors.required">Issuer is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="elgType" class="col-md-5 control-label" style="margin-top:1%">Eligibility Type
+                  </label>
+                  <select required class="form-control col-md-6" name="gender" [(ngModel)]="eligibilityEntity.eligibilityType"
+                     #elgTypeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && elgTypeControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f2.submitted && elgTypeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="elgTypeControl.errors.required">Eligibility type is required</div>
+                  </span>
+               </div>
+            </div>
+            <br />
+            <div>
+               <button type="button" class="btn btn-info col-md-1" (click)="submitPrev()">
+                  prev</button>
+               <button type="submit" class="btn btn-info col-md-1 offset-md-9">
+                  next</button>
+            </div>
+         </form>
+      </div>
+   </div>
+   <div class="tab-pane fade" id="kyh" [ngClass]="{'show active':currentTab === 'kyh'}" role="tabpanel" aria-labelledby="kyh-tab">
+      <div class="container">
+         <form name="kyhInfoForm" #f3="ngForm" (ngSubmit)="f3.valid && submitKyhInfo(eligibilityEntity)">
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="KYHPlanType" class="col-md-5 control-label" style="margin-top:1%">KYH Plan Type
+                  </label>
+                  <select required class="form-control col-md-7" name="kyhPlanType" [(ngModel)]="eligibilityEntity.kyhPlanType"
+                     #kyhPlanTypeControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPlanTypeControl.invalid }">
+                     <option *ngFor="let item of kyhPlanType" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPlanTypeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPlanTypeControl.errors.required">KYH plan type is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="kyhPremiumPlanCode" class="col-md-5 control-label" style="margin-top:1%">KYH Premium Plan
+                     Code
+                  </label>
+                  <select required class="form-control col-md-7" name="kyhPremiumPlanCode" [(ngModel)]="eligibilityEntity.kyhPremiumPlanCode"
+                     #kyhPremiumPlanCodeControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPremiumPlanCodeControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPremiumPlanCodeControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPremiumPlanCodeControl.errors.required">KYH Premium Plan Code is required</div>
+                  </span>
+               </div>
+
+
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="kyhCopayIndicator" class="col-md-5 control-label" style="margin-top:1%">KYH Copay
+                     Indicator
+                  </label>
+                  <select required class="form-control col-md-7" name="kyhCopayIndicator" [(ngModel)]="eligibilityEntity.kyhCopayIndicator"
+                     #kyhCopayIndicatorControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhCopayIndicatorControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhCopayIndicatorControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhCopayIndicatorControl.errors.required">KYH Copay Indicator is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="kyhPregnancyIndicator" class="col-md-5 control-label" style="margin-top:1%">KYH
+                     Pregnancy Indicator
+                  </label>
+                  <select required class="form-control col-md-7" name="kyhPregnancyIndicator" [(ngModel)]="eligibilityEntity.kyhPregnancyIndicator"
+                     #kyhPregnancyIndicatorControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPregnancyIndicatorControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPregnancyIndicatorControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPregnancyIndicatorControl.errors.required">KYH Pregnancy Indicator is required</div>
+                  </span>
+               </div>
+
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="kyhIndStartDate" class="col-md-5 control-label" style="margin-top:1%">KYH Ind Start Date</label>
+                  <input required type="date" class="form-control col-md-7" name="kyhIndStartDate" [(ngModel)]="eligibilityEntity.kyhIndStartDate"
+                     #kyhIndStartDateControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhIndStartDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhIndStartDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhIndStartDateControl.errors.required">Date is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="kyhIndEndDate" class="col-md-5 control-label" style="margin-top:1%">KYH Ind End Date</label>
+                  <input required type="date" class="form-control col-md-7" name="kyhIndEndDate" [(ngModel)]="eligibilityEntity.kyhIndEndDate"
+                     #kyhIndEndDateControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhIndEndDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhIndEndDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhIndEndDateControl.errors.required">Date is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="kyhPremiumAmount" class="col-md-5 control-label" style="margin-top:1%">KYH Premium Amount
+                  </label>
+                  <input required type="text" class="form-control col-md-7" name="kyhPremiumAmount" [(ngModel)]="eligibilityEntity.kyhPremiumAmt"
+                     #kyhPremiumAmountControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPremiumAmountControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPremiumAmountControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPremiumAmountControl.errors.required">Premium Amount is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="kyhPremiumStartDate" class="col-md-5 control-label" style="margin-top:1%">KYH Premium
+                     Start Date
+                  </label>
+                  <input required type="date" class="form-control col-md-7" name="kyhPremiumStartDate" [(ngModel)]="eligibilityEntity.kyhPremiumStartDate"
+                     #kyhPremiumStartDateControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPremiumStartDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPremiumStartDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPremiumStartDateControl.errors.required">Premium start date is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="kyhPremiumEndDate" class="col-md-5 control-label" style="margin-top:1%">KYH Premium End
+                     Date
+                  </label>
+                  <input required type="date" class="form-control col-md-7" name="kyhPremiumEndDate" [(ngModel)]="eligibilityEntity.kyhPremiumEndDate"
+                     #kyhPremiumEndDateControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && kyhPremiumEndDateControl.invalid }">
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && kyhPremiumEndDateControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="kyhPremiumEndDateControl.errors.required">Premium end date is required</div>
+                  </span>
+               </div>
+               <div class="col-md-6 row">
+                  <label for="processedByMMIS" class="col-md-5 control-label" style="margin-top:1%">Processed By MMIS
+                  </label>
+                  <select required class="form-control col-md-7" name="processedByMMIS" [(ngModel)]="eligibilityEntity.processedByMMIS"
+                     #processedByMMISControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && processedByMMISControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && processedByMMISControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="processedByMMISControl.errors.required">Field is required</div>
+                  </span>
+               </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px">
+               <div class="col-md-6 row">
+                  <label for="processedByMco" class="col-md-5 control-label" style="margin-top:1%">Processed By MCO
+                  </label>
+                  <select required class="form-control col-md-7" name="processedByMco" [(ngModel)]="eligibilityEntity.processedByMCO"
+                     #processedByMcoControl="ngModel" [ngClass]="{ 'is-invalid': f3.submitted && processedByMcoControl.invalid }">
+                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                     </option>
+                  </select>
+                  <span class="col-md-5"></span>
+                  <span *ngIf="f3.submitted && processedByMcoControl.invalid" class="col-md-7 invalid-feedback">
+                     <div *ngIf="processedByMcoControl.errors.required">Field is required</div>
+                  </span>
+               </div>
+            </div>
+            <br />
+            <div>
+               <button type="button" class="btn btn-info col-md-1" (click)="submitPrevElg()">
+                  prev</button>
+               <button type="submit" class="btn btn-info col-md-1 offset-md-9">
+                  submit</button>
+            </div>
+         </form>
+      </div>
+   </div>

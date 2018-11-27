@@ -1,0 +1,371 @@
+<div class="container">
+    <form name="invoiceSearchForm" #f="ngForm" (ngSubmit)="getSearchResults(searchInvoiceEntity)">
+        <div class="row col-md-12">
+            <div class="col-md-6 row">
+                <label class="col-md-5" style="margin-top:1%">Case Number:</label>
+                <input minlength="9" maxlength="9" type="text" class="form-control col-md-6" placeholder="Search by Case Number"
+                    name="caseNumber" [(ngModel)]="searchInvoiceEntity.caseNumber" #caseNumberControl="ngModel"
+                    [ngClass]="{ 'is-invalid': f.submitted && caseNumberControl.invalid }">
+                <span class="col-md-5"></span>
+                <span *ngIf="f.submitted && caseNumberControl.invalid" class="col-md-7 invalid-feedback">
+                    <div *ngIf="caseNumberControl.errors.maxlength">Case Number should be of 9 digits</div>
+                    <div *ngIf="caseNumberControl.errors.minlength">Case Number should be of 9 digits</div>
+                </span>
+            </div>
+            <div class="col-md-6 row">
+                <label class="col-md-6" style="margin-top:1%">Coverage Month:</label>
+                <input type="date" class="form-control col-md-6" name="coverageMonth" [(ngModel)]="searchInvoiceEntity.coverageMonth">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 5px">
+            <div class="col-md-6 row">
+                <label class="col-md-5" style="margin-top:1%">Issuer Id:</label>
+                <select class="form-control col-md-6" name="issuerId" [(ngModel)]="searchInvoiceEntity.issuerId">
+                    <option *ngFor="let item of issuerList" [value]="item.id">
+                        {{item.value}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6 row">
+                <label class="col-md-6" style="margin-top:1%">Processed By IEES:</label>
+
+                <select required class="form-control col-md-6" name="processedByIEES" [(ngModel)]="searchInvoiceEntity.processedByIEES">
+                    <option *ngFor="let item of processingStatus" [value]="item.id">
+                        {{item.value}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 5px">
+            <div class="col-md-6 row">
+                <label class="col-md-5" style="margin-top:1%">Create Date:</label>
+                <input type="date" class="form-control col-md-6" name="createDate" [(ngModel)]="searchInvoiceEntity.createDate">
+            </div>
+            <div class="col-md-6 row">
+                <label class="col-md-6" style="margin-top:1%"></label>
+                <button type="submit" class="btn btn-info col-md-6">Search</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<hr>
+
+<table class="table table-bordered tableFont" *ngIf="showSearchResults">
+    <thead style="text-align:center" class="table-condensed">
+        <tr [ngClass]="'table-'+userName">
+            <th>Case Number</th>
+            <th>Coverage Month</th>
+            <th>Premium Amount</th>
+            <th>Processed By IEES</th>
+            <th>Transaction Id</th>
+            <th>Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let txn of invoiceFilteredRecords;" style="text-align: center;cursor: pointer;" (click)="openModal(content,txn.transactionId)"
+            data-toggle="modal" data-target="#myModal">
+            <td>
+                {{txn.caseNumber}}
+            </td>
+            <td>
+                {{txn.coverageMonth | date: 'dd/MM/yyyy'}}
+            </td>
+            <td>
+                {{txn.premiumAmount | currency}}
+            </td>
+            <td>
+                {{txn.processedByIEES?'Yes':'No'}}
+            </td>
+            <td>
+                {{txn.transactionId}}
+            </td>
+            <td>
+                {{txn.createDate | date: 'dd/MM/yyyy'}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #content let-modal class="tableFont">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Transaction Details</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr [ngClass]="'table-'+userName">
+                    <th>#</th>
+                    <th>Transaction Type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of modalTransactionDetails; let j=index">
+                    <td>{{j+1}}</td>
+                    <td>
+                        <b>{{item.transactionType}}</b>
+                        <div [hidden]="item.hidden">
+                            <table class="table table-sm">
+                                <!-- Eligibility Information -->
+                                <tbody *ngIf="item.transactionType === 'Eligibility'" class="fixedHeightModalTableRows">
+                                        <tr>
+                                                <td><small><b>Maid Card Number</b></small></td>
+                                                <td style="text-align: center"><small>{{item.maidCardNumber}}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>CaseNumber</b></small></td>
+                                                <td style="text-align: center"><small>{{item.caseNumber}}</small></td>
+                                            </tr>
+                                            <tr>
+                                              <td><small><b>SSN</b></small></td>
+                                              <td style="text-align: center"><small>{{item.ssn}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>First Name</b></small></td>
+                                              <td style="text-align: center"><small>{{item.firstName}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Last Name</b></small></td>
+                                              <td style="text-align: center"><small>{{item.lastName}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Date Of Birth</b></small></td>
+                                              <td style="text-align: center"><small>{{item.dateOfBirth | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Gender</b></small></td>
+                                              <td style="text-align: center"><small>{{item.gender}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Address</b></small></td>
+                                              <td style="text-align: center"><small>{{item.address}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>City</b></small></td>
+                                              <td style="text-align: center"><small>{{item.city}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>State Code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.stateCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Zip Code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.zipCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Case countable income</b></small></td>
+                                              <td style="text-align: center"><small>{{item.caseCountableIncome}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Program code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.programCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Status Code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.statusCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>IMID Code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.imidCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Eligibility Start Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.eligibilityStartDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Eligibility End Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.eligibilityEndDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Enrollment Start Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.enrollmentStartDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Enrollment End Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.enrollmentEndDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Issuer Id</b></small></td>
+                                              <td style="text-align: center"><small>{{item.issuerId}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>Eligibility Type</b></small></td>
+                                              <td style="text-align: center"><small>{{item.eligibilityType}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Plan Type</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPlanType}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH premium plan code</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPremiumPlanCode}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Copay Indicator</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhCopayIndicator}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Pregnancy Indicator</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPregnancyIndicator}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Ind Start Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhIndStartDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Ind End Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhIndEndDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Premium Amount</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPremiumAmount | currency}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Premium Start Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPremiumStartDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                          <tr>
+                                              <td><small><b>KYH Premium End Date</b></small></td>
+                                              <td style="text-align: center"><small>{{item.kyhPremiumEndDate | date :'dd/MM/yyyy'}}</small></td>
+                                          </tr>
+                                            <tr>
+                                                <td><small><b>Processed By MMIS</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input [disabled]="userName==='mco'?true:false" type="checkbox" [checked]="item.processedByMMIS=='Y'?true:false" (change)="item.processedByMMIS = !item.processedByMMIS" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Processed By MCO</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input [disabled]="userName==='mmis'?true:false" type="checkbox" [checked]="item.processedByMCO=='Y'?true:false" (change)="item.processedByMCO = !item.processedByMCO" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                </tbody>
+                                <!-- Invoice Infromation -->
+                                <tbody *ngIf="item.transactionType === 'Invoice'" class="fixedHeightModalTableRows">
+                                        <tr>
+                                                <td><small><b>CaseNumber</b></small></td>
+                                                <td style="text-align: center"><small>{{item.caseNumber}}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Coverage Month</b></small></td>
+                                                <td style="text-align: center"><small>{{item.coverageMonth | date:
+                                                        'dd/MM/yyyy'}}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Issuer Id</b></small></td>
+                                                <td style="text-align: center"><small>{{item.issuerId }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Invoice Date</b></small></td>
+                                                <td style="text-align: center"><small>{{item.invoiceDate | date :'dd/MM/yyyy'
+                                                        }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Due Date</b></small></td>
+                                                <td style="text-align: center"><small>{{item.dueDate | date :'dd/MM/yyyy' }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Premium Amount</b></small></td>
+                                                <td style="text-align: center"><small>{{item.premiumAmount | currency }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Payment Status</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input disabled="true" type="checkbox" [checked]="item.paymentStatus==='Y'?true:false" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Processed By IEES</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input type="checkbox" [checked]="item.processedByIEES == 'Y'?true:false"
+                                                            (change)="item.processedByIEES = !item.ProcessedByIEES" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                </tbody>
+
+                                <!-- Payment Infromation -->
+                                <tbody *ngIf="item.transactionType === 'Payment'" class="fixedHeightModalTableRows">
+                                        <tr>
+                                                <td><small><b>CaseNumber</b></small></td>
+                                                <td style="text-align: center"><small>{{item.caseNumber}}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Coverage Month</b></small></td>
+                                                <td style="text-align: center"><small>{{item.coverageMonth | date:
+                                                        'dd/MM/yyyy'}}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Issuer Id</b></small></td>
+                                                <td style="text-align: center"><small>{{item.issuerId }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Invoice Date</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        {{item.invoiceDate | date: 'dd/MM/yyyy'}}
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Due Date</b></small></td>
+                                                <td style="text-align: center"><small>{{item.dueDate | date :'dd/MM/yyyy' }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Premium Amount</b></small></td>
+                                                <td style="text-align: center"><small>{{item.premiumAmount | currency }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Payment Date</b></small></td>
+                                                <td style="text-align: center"><small>{{item.paymentDate | date :'dd/MM/yyyy'
+                                                        }}</small></td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Payment Status</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input disabled="true" type="checkbox" [checked]="item.paymentStatus == 'Y'?true:false" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><small><b>Processed By IEES</b></small></td>
+                                                <td style="text-align: center">
+                                                    <small>
+                                                        <input type="checkbox" [checked]="item.processedByIEES == 'Y' ?true:false"
+                                                            (change)="item.processedByIEES = !item.ProcessedByIEES" />
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                    <td style="text-align: center">
+                        <a [hidden]="!item.hidden" class="Pointer smallButton" (click)="ShowDetails(item)">View
+                            More</a>
+                        <a [hidden]="item.hidden" class="Pointer smallButton" (click)="HideDetails(item)">View Less</a>
+                        <br>
+                        <button [hidden]="item.hidden" class="btn btn-info btn-sm" (click)="HideDetails(item)" style="margin-top: 35%">Submit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" (click)="modal.close()">Dismiss</button>
+    </div>
+</ng-template>

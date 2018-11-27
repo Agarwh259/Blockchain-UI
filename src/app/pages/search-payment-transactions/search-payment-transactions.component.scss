@@ -1,0 +1,36 @@
+.noPadding{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.smallButton {
+    line-height: 0%;
+    height: 20px;
+}
+
+.fixedHeightModalTableRows{
+    max-height: 100px; 
+    overflow-y:auto; 
+    display: block;
+    }
+
+    .tableFont{
+        font-family:'roboto-condensed', 'Microsoft Yahei';
+        font-size: 14px;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+    .table-mmis{
+        background:black!important;
+        color:white;
+    }
+    .table-iees{
+        background:#030d49!important;
+        color:white;
+    }
+    .table-mco{
+        background:#281801!important;
+        color:white;
+    }
+

@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-4 animated fadeIn">
+      <div class="card card-block tip-card">
+      <div style="display: block">
+        <p style="margin-left:25%">Total Eligibility Transactions</p>
+          <canvas baseChart
+                      [data]="doughnutChartData"
+                      [chartType]="doughnutChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)"></canvas>
+        </div></div>
+  </div>
+  <div class="col-md-4 animated fadeIn">
+      <div class="card card-block tip-card">
+      <div style="display: block">
+          <p style="margin-left:25%">Total Payment Transactions</p>
+          <canvas baseChart
+                      [data]="doughnutChartData1"
+                      [chartType]="doughnutChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 animated fadeIn">
+        <div class="card card-block tip-card">
+        <div style="display: block">
+            <p style="margin-left:25%">Total Invoice Transactions</p>
+            <canvas baseChart
+                        [data]="doughnutChartData2"
+                        [chartType]="doughnutChartType"
+                        (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+      </div>
+    <div class="col-md-12">
+      <app-basic-tables></app-basic-tables>
+  </div>
