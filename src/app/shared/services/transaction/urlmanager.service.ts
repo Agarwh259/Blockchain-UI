@@ -10,5 +10,8 @@ export class UrlmanagerService implements UrlManager {
   searchTransactions: String;
   updateTransaction: String;
 
-  constructor() { }
+  constructor() {
+  this.submitEligibility = 'http://104.211.213.148:4000/channels/medicaidchannel/chaincodes/medicaidcc'; 
+
+  }
 }
