@@ -5,8 +5,7 @@ import { BasicInfoEntity ,ElgInfoEntity, KYHInfoEntity} from '../entity';
 import { EligibilityTransaction } from 'src/app/shared/models/transaction/eligibility';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
-import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-submit-eligibility-transactions',
@@ -35,8 +34,54 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     submitPrev() {
       this.currentTab = 'basic';
     }
-    submitPrevElg() {
-      this.currentTab = 'elg';
+   
+
+  
+    // basicInfoEntity : BasicInfoEntity = {
+    //   transactionId:null,
+    //   transactionType: null,
+    //   maidCardNumber : null,
+    //   caseNumber : null,
+    //   ssn : null,
+    //   firstName : null,
+    //   lastName : null,
+    //   dateOfBirth : null,
+    //   gender : null,
+    //   addressLine1 : null,
+    //   city : null,
+    //   stateCode : null,
+    //   zipCode : null
+    // }
+
+    // elgInfoEntity:ElgInfoEntity = {
+    //   caseCountableIncome:null,
+    //   programCode:null,
+    //   eligibilityEndDate:null,
+    //   eligibilityStartDate:null,
+    //   enrollmentEndDate:null,
+    //   enrollmentStartDate:null,
+    //   statusCode:null,
+    //   iMIDCode:null,
+    //   issuerId:null,
+    //   elgType:null
+    // }
+  
+    // kyhInfoEntity:KYHInfoEntity ={
+    //   kyhPlanType:null,
+    //   kyhPremiumPlanCode:null,
+    //   kyhCopayIndicator:null,
+    //   kyhPregnancyIndicator:null,
+    //   kyhIndStartDate:null,
+    //   kyhIndEndDate:null,
+    //   kyhPremiumAmt:null,
+    //   kyhPremiumStartDate:null,
+    //   kyhPremiumEndDate:null,
+    //   processedByMMIS:null,
+    //   processedByMCO:null
+    // }
+
+    constructor(private spinner: NgxSpinnerService) { 
+      
     }
 
 
@@ -120,10 +165,14 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     }
     submitKyhInfo(entity: EligibilityTransaction): void {
       console.log(entity);
-      
-      this.transactionservice.submit(entity);
+      alert("Submit Success!!")
 
-      alert('Submit Success!!');
+      this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+  }, 5000);
     }
 
 }

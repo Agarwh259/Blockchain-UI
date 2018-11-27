@@ -5,6 +5,7 @@ import { Property } from '../property';
 import { EligibilitySearchTransaction } from 'src/app/shared/models/transaction/eligibility-search';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-search-eligibility-transactions',
@@ -25,7 +26,8 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
 
   searchEligibilityEntity : EligibilitySearchTransaction;
 
-  constructor(private data : DataService, private modalService: NgbModal) { }
+  constructor(private data : DataService, private modalService: NgbModal,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -98,7 +100,15 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
     this.eligibilityFilteredRecords = this.rawSearchResults.filter(function(el){
       return el.caseNumber == entity.caseNumber;
     });
-  }
+
+    this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+  }, 5000);
+  
+}
 
 
 }
