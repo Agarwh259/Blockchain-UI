@@ -5,7 +5,7 @@ import { BasicInfoEntity ,ElgInfoEntity,KYHInfoEntity} from '../entity';
 import { EligibilityTransaction } from 'src/app/shared/models/transaction/eligibility';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-submit-eligibility-transactions',
@@ -76,7 +76,7 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     //   processedByMCO:null
     // }
 
-    constructor() { 
+    constructor(private spinner: NgxSpinnerService) { 
       
     }
   
@@ -164,6 +164,13 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     {
       console.log(entity);
       alert("Submit Success!!")
+
+      this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+  }, 5000);
     }
     
 }

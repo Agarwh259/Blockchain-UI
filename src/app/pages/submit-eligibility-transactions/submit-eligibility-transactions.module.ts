@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './submit-eligibility-transactions.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { SubmitEligibilityTransactionsComponent } from './submit-eligibility-transactions.component'
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
     imports: [
@@ -12,7 +12,8 @@ import { SubmitEligibilityTransactionsComponent } from './submit-eligibility-tra
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        routing
+        routing,
+        NgxSpinnerModule
     ],
     declarations: [
         SubmitEligibilityTransactionsComponent    ]
