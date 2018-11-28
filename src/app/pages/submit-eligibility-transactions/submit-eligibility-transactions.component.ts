@@ -34,6 +34,10 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     submitPrev() {
       this.currentTab = 'basic';
     }
+
+    submitPrevElg() {
+      this.currentTab = 'elg';
+    }
    
 
 
