@@ -11,11 +11,11 @@ export class TokenmanagerService {
     switch (organization) {
       case 'MCO':
         // tslint:disable-next-line:max-line-length
-        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMyNjk2NjAsInVzZXJuYW1lIjoiQWJlbEpvaG5wYXNzMTIzIiwib3JnTmFtZSI6Ik1jbyIsImlhdCI6MTU0MzIzMzY2MH0.ALxSQIHX2ndpwY1dlEpZL9hy7_Bl3zTiHSPReXNaQMw';
+        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzNzA2ODEsInVzZXJuYW1lIjoiQWJlbEpvaG5wYXNzMTIzIiwib3JnTmFtZSI6Ik1jbyIsImlhdCI6MTU0MzMzNDY4MX0.rScpNDN0f24A-i5JWCCAT-VHnmRhVFXoAMu0OPoCInA';
         break;
       case 'MMIS':
         // tslint:disable-next-line:max-line-length
-        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMyNjk2NTksInVzZXJuYW1lIjoiTWFjZXlXaWxsaWFtc3Bhc3MxMjMiLCJvcmdOYW1lIjoiTW1pcyIsImlhdCI6MTU0MzIzMzY1OX0.EQu2KIW76uhCubvixu62_oJYiBdv-A61vtWaEoelsLE';
+        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzNzA2ODAsInVzZXJuYW1lIjoiTWFjZXlXaWxsaWFtc3Bhc3MxMjMiLCJvcmdOYW1lIjoiTW1pcyIsImlhdCI6MTU0MzMzNDY4MH0.cQJoMGk3s1ezSRLihHB1enJibu_HemOwEMlV-9oZyiQ';
         break;
       default:
         // tslint:disable-next-line:max-line-length
