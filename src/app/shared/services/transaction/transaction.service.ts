@@ -11,6 +11,7 @@ import { EligibilityTransaction } from '../../models/transaction/eligibility';
 import { Organization } from '../../models/user/organization';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RequestBody } from '../../models/transaction/requestbody';
+import { Guid } from 'guid-typescript';
 
 
 @Injectable({
@@ -21,6 +22,7 @@ export class TransactionService implements TransactionManager, Organization {
   orgTitle: String;
   private readonly _logger: LoggerService;
   private readonly _tokenManager: TokenmanagerService;
+  tranId: Guid;
   /**
    * Creates a new instance of the TransactionService
    * @param urlmanager contains all the endpoints of the blockchain API/Couchdb
@@ -79,12 +81,15 @@ export class TransactionService implements TransactionManager, Organization {
    this.headers = new HttpHeaders().set('JWT', this._jwtCode as string)
    .set('Content-Type', 'application/json');
 
+   this.tranId = transaction.transactionId;
+  // Log the transactionId for verification.
+   this._logger.Log(this.tranId, Loglevel.Info);
     // Construct the request body
     this.requestBody = new RequestBody();
     this.requestBody.peers = ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
     this.requestBody.fcn = 'CreateF3Request';
     this.requestBody.args = [ {
-      transactionId: transaction.transactionId,
+      transactionId: this.tranId.toString(),
       transactionType: transaction.transactionType,
       maidCardNumber: transaction.maidCardNumber,
       caseNumber: transaction.caseNumber,
