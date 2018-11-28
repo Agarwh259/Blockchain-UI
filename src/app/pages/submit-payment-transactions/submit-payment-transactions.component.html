@@ -10,13 +10,7 @@
                 <div *ngIf="transactionIdControl.errors.required">Transaction type is required</div>
               </span>
           </div>
-      <div class="col-md-6 row">
-
-      </div>
-
-    </div>
-    <div class="row col-md-12" style="margin-top: 5px">
-        <div class="col-md-6 row">
+         <div class="col-md-6 row">
             <label for="transactionType" class="col-md-5 control-label" style="margin-top:1%">Transaction Type</label>
             <input readonly required type="text" class="form-control col-md-7" name="transactionType" [(ngModel)]="paymentEntity.transactionType"
               #transactionTypeControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && transactionTypeControl.invalid }">
@@ -25,6 +19,18 @@
               <div *ngIf="transactionTypeControl.errors.required">Transaction type is required</div>
             </span>
           </div>
+
+    </div>
+    <div class="row col-md-12" style="margin-top: 5px">
+        <!-- <div class="col-md-6 row">
+            <label for="transactionType" class="col-md-5 control-label" style="margin-top:1%">Transaction Type</label>
+            <input readonly required type="text" class="form-control col-md-7" name="transactionType" [(ngModel)]="paymentEntity.transactionType"
+              #transactionTypeControl="ngModel" [ngClass]="{ 'is-invalid': f.submitted && transactionTypeControl.invalid }">
+            <span class="col-md-5"></span>
+            <span *ngIf="f.submitted && transactionTypeControl.invalid" class="col-md-7 invalid-feedback">
+              <div *ngIf="transactionTypeControl.errors.required">Transaction type is required</div>
+            </span>
+          </div> -->
           <div class="col-md-6 row">
               <label for="caseNumber" class="col-md-5 control-label" style="margin-top:1%">Case Number</label>
               <input required minlength="9" maxlength="9" type="text" class="form-control col-md-7" name="caseNumber"
@@ -36,9 +42,19 @@
                 <div *ngIf="caseNumberControl.errors.minlength">Case Number should be of 9 digits</div>
               </span>
             </div>
+            <div class="col-md-6 row">
+              <label for="paymentDate" class="col-md-5 control-label" style="margin-top:1%">Payment Date</label>
+              <input required name="paymentDate" type="date" class="form-control col-md-7"
+              [(ngModel)]="paymentEntity.paymentDate" #paymentDateControl="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && paymentDateControl.invalid }">
+              <span class="col-md-5"></span>
+              <span *ngIf="f.submitted && paymentDateControl.invalid" class="col-md-7 invalid-feedback">
+                <div *ngIf="paymentDateControl.errors.required">Payment date is required</div>
+              </span>
+            </div>
 
     </div>
-    <div class="row col-md-12" style="margin-top: 5px">
+    <!-- <div class="row col-md-12" style="margin-top: 5px">
         <div class="col-md-6 row">
             <label for="coverageMonth" class="col-md-5 control-label" style="margin-top:1%">Coverage Month</label>
             <input required type="date" class="form-control col-md-7" name="coverageMonth" [(ngModel)]="paymentEntity.coverageMonth"
@@ -132,7 +148,7 @@
             <div *ngIf="processedByIEESControl.errors.required">Field is required</div>
           </span>
         </div>
-    </div>
+    </div> -->
 
     <div class="row col-md-12" style="margin-top: 10px">
       <div class="col-md-6 row">
