@@ -4,6 +4,7 @@ export interface TransactionManager {
 
     submit(transaction: Transaction): any;
     search(casenumber: Number): Transaction[];
-    update(transaction: Transaction): Boolean;
+    updatePayment(casenumber: Number, organization: String, paymentDate?: Date): Boolean;
+    updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): Boolean;
 
 }

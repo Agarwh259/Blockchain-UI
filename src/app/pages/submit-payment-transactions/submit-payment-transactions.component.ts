@@ -19,12 +19,12 @@ export class SubmitPaymentTransactionsComponent implements OnInit {
   issuerList : Property[];
   processingStatus : Property[];
 
-  paymentEntity : PaymentTransaction; 
+  paymentEntity : PaymentTransaction;
 
   paymentStatus : Property[];
 
-  constructor() { 
-    
+  constructor() {
+
   }
 
   ngOnInit() {
@@ -40,6 +40,7 @@ export class SubmitPaymentTransactionsComponent implements OnInit {
       paymentStatus : undefined,
       paymentDate : undefined,
       processedByIEES : undefined,
+      processedByMCO: undefined
     }
 
     this.issuerList = [

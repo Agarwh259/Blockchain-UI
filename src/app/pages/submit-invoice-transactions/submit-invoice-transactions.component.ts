@@ -19,14 +19,14 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
   invoiceEntity : PaymentTransaction;
 
   paymentStatus : Property[];
- 
+
   public options = {
     timeOut: 5000,
     position:["top","right"]
       };
-      
-  constructor(private _service: NotificationsService) { 
-    
+
+  constructor(private _service: NotificationsService) {
+
   }
 
   ngOnInit() {
@@ -41,6 +41,7 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
       premiumAmount : undefined,
       paymentStatus : undefined,
       processedByIEES : undefined,
+      processedByMCO: undefined
     }
 
     this.issuerList = [

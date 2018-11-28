@@ -9,9 +9,12 @@ export class UrlmanagerService implements UrlManager {
   submitPayment: String;
   searchTransactions: String;
   updateTransaction: String;
+  baseUrl: string;
 
   constructor() {
-  this.submitEligibility = 'http://104.211.213.148:4000/channels/medicaidchannel/chaincodes/medicaidcc'; 
+    this.baseUrl  = 'http://104.211.213.148:4000/channels/medicaidchannel/chaincodes/medicaidcc';
+    this.submitEligibility = this.baseUrl;
+    this.submitPayment = this.baseUrl;
 
   }
 }

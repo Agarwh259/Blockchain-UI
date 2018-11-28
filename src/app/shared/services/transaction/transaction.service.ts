@@ -18,13 +18,15 @@ import { Guid } from 'guid-typescript';
   providedIn: 'root'
 })
 export class TransactionService implements TransactionManager, Organization {
+
   orgCode: String;
   orgTitle: String;
   private readonly _logger: LoggerService;
   private readonly _tokenManager: TokenmanagerService;
   tranId: Guid;
   /**
-   * Creates a new instance of the TransactionService
+   * Creates a new icls
+   * nstance of the TransactionService
    * @param urlmanager contains all the endpoints of the blockchain API/Couchdb
    * @param logger provides an interface to log a message to the console
    */
@@ -32,6 +34,7 @@ export class TransactionService implements TransactionManager, Organization {
   this._logger = logger;
     this._logger.Log('Instantiating TransactionService', Loglevel.Info);
     this._tokenManager = tokenmanager;
+
   }
 
   private transactions: Transaction[];
@@ -51,20 +54,16 @@ export class TransactionService implements TransactionManager, Organization {
     // call the blockchain API to submit the transaction
     switch (transaction.transactionType) {
       case TransactionType.Invoice:
-        this.submitInvoice(transaction);
+      return  this.submitInvoice(transaction as PaymentTransaction);
         break;
-    case TransactionType.Payment: this.submitPayment(transaction as PaymentTransaction); break;
-      default: 
+
+      default:
       return this.submitEligibility(transaction as EligibilityTransaction);
         break;
     }
      return ;
   }
-  private submitPayment(transaction: PaymentTransaction): any {
-    this.setOrganization('MCO');
-    this.getWebToken();
 
-  }
   private setOrganization(orgCode: String) {
     this.orgCode = orgCode;
   }
@@ -79,8 +78,7 @@ export class TransactionService implements TransactionManager, Organization {
 
     // Construct the request header
 
-   this.headers = new HttpHeaders().set('JWT', this._jwtCode as string)
-   .set('Content-Type', 'application/json');
+  this.setHeaders();
 
    this.tranId = transaction.transactionId;
   // Log the transactionId for verification.
@@ -128,36 +126,57 @@ export class TransactionService implements TransactionManager, Organization {
 
     // We have the transaction and the web token. Now,we can make the Http Call.
 
-    // log
-
-    const Url = 'Url: ' + this.urlmanager.submitEligibility.toString();
-    const reqBody = 'Request Body: ' + JSON.stringify(this.requestBody);
-    const Headers = 'Request Headers: ' + this.headers;
-    this._logger.Log( Url, Loglevel.Info);
-    this._logger.Log(reqBody, Loglevel.Info);
-    this._logger.Log(Headers, Loglevel.Info);
-    return this.http.post(this.urlmanager.submitEligibility.toString(), this.requestBody, { headers: this.headers } ).
-    toPromise()
-    .then(this.getResponse)
-    .catch(this.handleError); 
+  return this.callHyperLedger(this.urlmanager.submitEligibility.toString(), this.requestBody, this.headers );
   }
 
-  private getResponse(res : Response)
-  {
-    let body = res.json();
+  private getResponse(res: Response) {
+    const body = res.json();
     return body || {};
   }
 
-  private handleError(error: any): Promise<any> 
-  {
+  private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error);
   }
 
-  private submitInvoice(transaction: Transaction): any {
+  private submitInvoice(transaction: PaymentTransaction): any {
     this.setOrganization('MCO');
     this.getWebToken();
+
+
+    // Construct the request header
+
+    this.setHeaders();
+
+   this.tranId = transaction.transactionId;
+  // Log the transactionId for verification.
+   this._logger.Log(this.tranId, Loglevel.Info);
+    // Construct the request body
+    this.requestBody = new RequestBody();
+    this.requestBody.peers =  ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
+    this.requestBody.fcn = 'GenerateInvoice';
+    this.requestBody.args = [{
+
+      transactionId: this.tranId.toString(),
+      transactionType: transaction.transactionType,
+      caseNumber: transaction.caseNumber,
+      coverageMonth: transaction.coverageMonth,
+      invoiceDate: transaction.invoiceDate,
+      issuerId: transaction.issuerId,
+      dueDate: transaction.dueDate,
+      premiumAmount: transaction.premiumAmount,
+      paymentStatus: transaction.paymentStatus,
+      paymentDate: transaction.paymentDate,
+      processedByIEES: transaction.processedByIEES  ? undefined : 'N',
+      processedByMCO: transaction.processedByMCO ? undefined : 'N'
+
+    }];
+
+    return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
   }
+
+
+
 
   /**
    * Calls the blockchain API to get all the transactions
@@ -175,9 +194,57 @@ export class TransactionService implements TransactionManager, Organization {
    * returns True if the update is successful
    * @param transaction that needs to be updated
    */
-  update(transaction: Transaction): Boolean {
-    this._logger.Log('Updating Transaction : ' + transaction);
-    // make a call the blockchain API/ Couchdb API
+  updatePayment(casenumber: Number, organization: String, paymentDate?: Date): any {
+    this.setOrganization('MCO');
+    this.getWebToken();
+
+
+    // Construct the request header
+
+    this.setHeaders();
+     // Construct the request body
+     this.requestBody = new RequestBody();
+     let flag = 'processedByIEES';
+     switch (organization) {
+       case 'IEES':
+       this.requestBody.peers =  ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
+         break;
+
+       default: this.requestBody.peers = ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
+       flag = 'processedByMCO';
+         break;
+     }
+
+     this.requestBody.fcn = 'UpdateInvoiceAndPayment';
+     this.requestBody.args = [{
+
+      caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
+
+     }];
+
+     return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
+  }
+
+  private setHeaders() {
+    this.headers = new HttpHeaders().set('JWT', this._jwtCode as string)
+      .set('Content-Type', 'application/json');
+  }
+
+  updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): Boolean {
+
     return true;
+  }
+
+  private callHyperLedger(url: String, body: any, requestHeaders: HttpHeaders) {
+    const Url = 'Url: ' + url;
+    const reqBody = 'Request Body: ' + JSON.stringify( body);
+    const Headers = 'Request Headers: ' + requestHeaders;
+    this._logger.Log(Url, Loglevel.Info);
+    this._logger.Log(reqBody, Loglevel.Info);
+    this._logger.Log(Headers, Loglevel.Info);
+    return this.http.post(url as string, body, { headers: requestHeaders }).
+      toPromise()
+      .then(this.getResponse)
+      .catch(this.handleError);
   }
 }

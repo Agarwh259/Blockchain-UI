@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import { TokenmanagerService } from './transaction/tokenmanager.service';
 
 
 @Injectable()
 export class AuthenticationService {
-    constructor() { 
+    constructor(
+
+      private tokenManager : TokenmanagerService
+    ) {
 
 
     }
@@ -40,12 +44,13 @@ export class AuthenticationService {
                        let title = userDataList.title;
                         console.log(role);
                    if(!!role){
-                       
+
                    // store user details and jwt token in local storage to keep user logged in between page refreshes
                     sessionStorage.setItem('currentUser', JSON.stringify(username));
                     sessionStorage.setItem('isLoggedIn','Y');
                     sessionStorage.setItem('Role',role);
                     sessionStorage.setItem('Title',title);
+                    sessionStorage.setItem('JWT', this.tokenManager.getToken('IEES').toString() );
                    }
                    }
                    else{

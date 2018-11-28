@@ -9,4 +9,5 @@ export interface PaymentTransaction extends Transaction {
     paymentStatus: Boolean;
     paymentDate?: Date;
     processedByIEES: Boolean;
+    processedByMCO: Boolean;
 }
