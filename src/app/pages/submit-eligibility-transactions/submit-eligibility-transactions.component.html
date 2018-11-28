@@ -439,7 +439,7 @@
                      <div *ngIf="kyhPremiumEndDateControl.errors.required">Premium end date is required</div>
                   </span>
                </div>
-               <div class="col-md-6 row">
+               <!-- <div class="col-md-6 row">
                   <label for="processedByMMIS" class="col-md-5 control-label" style="margin-top:1%">Processed By MMIS
                   </label>
                   <select required class="form-control col-md-7" name="processedByMMIS" [(ngModel)]="eligibilityEntity.processedByMMIS"
@@ -452,9 +452,9 @@
                   <span *ngIf="f3.submitted && processedByMMISControl.invalid" class="col-md-7 invalid-feedback">
                      <div *ngIf="processedByMMISControl.errors.required">Field is required</div>
                   </span>
-               </div>
+               </div> -->
             </div>
-            <div class="row col-md-12" style="margin-top: 5px">
+            <!-- <div class="row col-md-12" style="margin-top: 5px">
                <div class="col-md-6 row">
                   <label for="processedByMco" class="col-md-5 control-label" style="margin-top:1%">Processed By MCO
                   </label>
@@ -469,7 +469,7 @@
                      <div *ngIf="processedByMcoControl.errors.required">Field is required</div>
                   </span>
                </div>
-            </div>
+            </div> -->
             <br />
             <div>
                <button type="button" class="btn btn-info col-md-1" (click)="submitPrevElg()">

@@ -84,8 +84,8 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
         kyhPremiumAmt: undefined,
         kyhPremiumStartDate: undefined,
         kyhPremiumEndDate: undefined,
-        processedByMMIS: undefined,
-        processedByMCO: undefined,
+        processedByMMIS: false,
+        processedByMCO: false,
       };
 
       this.issuerList = [
