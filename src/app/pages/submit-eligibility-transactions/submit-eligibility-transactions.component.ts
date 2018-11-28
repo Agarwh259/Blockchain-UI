@@ -117,16 +117,24 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     }
     submitKyhInfo(entity: EligibilityTransaction): void {
       console.log(entity);
-      this.transactionservice.submit(entity);
-      alert("Submit Success!!");
-
       this.spinner.show();
-
-    setTimeout(() => {
-      /** spinner ends after 5 seconds */
-      this.spinner.hide();
-  }, 5000);
-    window.location.reload();
+      
+      console.log(this.transactionservice.submit(entity));
+      this.transactionservice
+      .submit(entity)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+          this.spinner.hide();
+          alert("Submit successful.");
+        })
+      .catch(error => {
+        console.log(error);
+        this.spinner.hide();
+        console.log(error.status);
+        alert("Something went wrong. Unable to submit transaction.!");
+      });
     }
 
 }

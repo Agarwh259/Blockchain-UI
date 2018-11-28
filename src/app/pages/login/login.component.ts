@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
     console.log(f);
     this.loading = true;
       this.authenticationService.login(f.username, f.password);
-      debugger;
       if(!!sessionStorage.getItem('Role')){
       this.router.navigate(['/pages/index']);
       }

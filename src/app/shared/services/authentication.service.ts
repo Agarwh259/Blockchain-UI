@@ -40,7 +40,7 @@ export class AuthenticationService {
                        let title = userDataList.title;
                         console.log(role);
                    if(!!role){
-                       debugger;
+                       
                    // store user details and jwt token in local storage to keep user logged in between page refreshes
                     sessionStorage.setItem('currentUser', JSON.stringify(username));
                     sessionStorage.setItem('isLoggedIn','Y');

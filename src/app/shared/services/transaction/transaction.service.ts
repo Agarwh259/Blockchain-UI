@@ -45,7 +45,7 @@ export class TransactionService implements TransactionManager, Organization {
    * Calls the blockchain API to add the transaction
    * @param transaction that the user wants to submit on to the blockchain
    */
-  submit(transaction: Transaction): Boolean {
+  submit(transaction: Transaction): Promise<any> {
     this._logger.Log(
       'Submitting the Transaction : ' + transaction);
     // call the blockchain API to submit the transaction
@@ -54,10 +54,11 @@ export class TransactionService implements TransactionManager, Organization {
         this.submitInvoice(transaction);
         break;
     case TransactionType.Payment: this.submitPayment(transaction as PaymentTransaction); break;
-      default: this.submitEligibility(transaction as EligibilityTransaction);
+      default: 
+      return this.submitEligibility(transaction as EligibilityTransaction);
         break;
     }
-    return true;
+     return ;
   }
   private submitPayment(transaction: PaymentTransaction): any {
     this.setOrganization('MCO');
@@ -72,7 +73,7 @@ export class TransactionService implements TransactionManager, Organization {
     this._jwtCode = this._tokenManager.getToken(this.orgCode);
   }
 
- private submitEligibility(transaction: EligibilityTransaction): any {
+ private submitEligibility(transaction: EligibilityTransaction): Promise<any> {
     this.setOrganization('IEES');
     this.getWebToken();
 
@@ -135,8 +136,24 @@ export class TransactionService implements TransactionManager, Organization {
     this._logger.Log( Url, Loglevel.Info);
     this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);
-    this.http.post(this.urlmanager.submitEligibility.toString(), this.requestBody, { headers: this.headers } );
+    return this.http.post(this.urlmanager.submitEligibility.toString(), this.requestBody, { headers: this.headers } ).
+    toPromise()
+    .then(this.getResponse)
+    .catch(this.handleError); 
   }
+
+  private getResponse(res : Response)
+  {
+    let body = res.json();
+    return body || {};
+  }
+
+  private handleError(error: any): Promise<any> 
+  {
+    console.error('An error occurred', error);
+    return Promise.reject(error);
+  }
+
   private submitInvoice(transaction: Transaction): any {
     this.setOrganization('MCO');
     this.getWebToken();
