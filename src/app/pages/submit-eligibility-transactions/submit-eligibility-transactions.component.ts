@@ -5,6 +5,7 @@ import { EligibilityTransaction } from 'src/app/shared/models/transaction/eligib
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NotificationsService, NotificationType } from 'angular2-notifications';
 import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
 
 @Component({
@@ -15,7 +16,8 @@ import { TransactionService } from 'src/app/shared/services/transaction/transact
 
 export class SubmitEligibilityTransactionsComponent implements OnInit {
 
-    constructor( private transactionservice: TransactionService, private spinner: NgxSpinnerService) {
+    constructor( private transactionservice: TransactionService, private spinner: NgxSpinnerService
+      ,private _service: NotificationsService) {
 
     }
 
@@ -26,6 +28,11 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     kyhPlanType: any;
     genderStatus: any;
 
+    public options = {
+      timeOut: 5000,
+      position:["top","right"]
+        };
+
     eligibilityEntity: EligibilityTransaction;
 
 
@@ -34,11 +41,11 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     submitPrev() {
       this.currentTab = 'basic';
     }
+   
 
     submitPrevElg() {
       this.currentTab = 'elg';
     }
-   
 
 
     ngOnInit() {
@@ -131,13 +138,13 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
           console.log(result);
           console.log(result.status);
           this.spinner.hide();
-          alert("Submit successful.");
+          this._service.create('Success','"Eligibility submitted successfully"',NotificationType.Success);
         })
       .catch(error => {
         console.log(error);
         this.spinner.hide();
         console.log(error.status);
-        alert("Something went wrong. Unable to submit transaction.!");
+        this._service.create('Error','"Something went wrong. Unable to submit transaction.!"',NotificationType.Error);
       });
     }
 

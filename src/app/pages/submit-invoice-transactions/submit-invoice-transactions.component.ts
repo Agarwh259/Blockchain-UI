@@ -5,7 +5,7 @@ import { PaymentTransaction } from 'src/app/shared/models/transaction/payment';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { PaymentStatus } from 'src/app/shared/models/transaction/payment-status.enum';
-
+import { NotificationsService, NotificationType } from 'angular2-notifications';
 
 @Component({
   selector: 'app-submit-invoice-transactions',
@@ -20,8 +20,12 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
 
   paymentStatus : Property[];
  
-
-  constructor() { 
+  public options = {
+    timeOut: 5000,
+    position:["top","right"]
+      };
+      
+  constructor(private _service: NotificationsService) { 
     
   }
 
@@ -60,6 +64,6 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
 
   submitInvoiceTransaction(newInvoiceEntity : PaymentTransaction) : void
   {
-    console.log(newInvoiceEntity);
+    this._service.create('Success','"Payment submitted successfully"',NotificationType.Success);
   }
 }

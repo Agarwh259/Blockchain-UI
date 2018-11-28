@@ -4,6 +4,7 @@ import { routing } from './pages.routing';
 
 import { LayoutModule } from '../shared/layout.module';
 import { SharedModule } from '../shared/shared.module';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 /* components */
 import { PagesComponent } from './pages.component';

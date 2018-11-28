@@ -5,6 +5,8 @@ import { routing } from './submit-eligibility-transactions.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { SubmitEligibilityTransactionsComponent } from './submit-eligibility-transactions.component'
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 
 @NgModule({
     imports: [
@@ -13,7 +15,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
         ReactiveFormsModule,
         SharedModule,
         routing,
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        SimpleNotificationsModule.forRoot()
     ],
     declarations: [
         SubmitEligibilityTransactionsComponent    ]
