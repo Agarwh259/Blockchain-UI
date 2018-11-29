@@ -155,5 +155,68 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
 
 }
 
+SubmitDetails(item){
+  debugger;
+  if(this.userName == 'mco' && item.processedByMCO == 'Y')
+  {
+    if(item.transactionType == 'Eligibility')
+    {
+      this.transactionService
+    .updateEligibility(item.caseNumber, this.userName)
+    .then(result =>
+      {
+        console.log(result);
+        console.log(result.status);
+      })
+    .catch(error => {
+      console.log(error);
+      console.log(error.status);
+    });
+    }  
+    else if(item.transactionType == 'Payment')
+    {
+      this.transactionService
+    .updatePayment(item.caseNumber, this.userName)
+    .then(result =>
+      {
+        console.log(result);
+        console.log(result.status);
+      })
+    .catch(error => {
+      console.log(error);
+      console.log(error.status);
+    });
+    }    
+  }
+  else if(this.userName == 'mmis' && item.processedByMMIS == 'Y')
+  {
+    this.transactionService
+    .updateEligibility(item.caseNumber, this.userName)
+    .then(result =>
+      {
+        console.log(result);
+        console.log(result.status);
+      })
+    .catch(error => {
+      console.log(error);
+      console.log(error.status);
+    });
+  }
+  else if(this.userName = 'iees' && item.processedByIEES == 'Y')
+  {
+    this.transactionService
+    .updatePayment(item.caseNumber, this.userName)
+    .then(result =>
+      {
+        console.log(result);
+        console.log(result.status);
+      })
+    .catch(error => {
+      console.log(error);
+      console.log(error.status);
+    });
+  }
+}
+
 
 }

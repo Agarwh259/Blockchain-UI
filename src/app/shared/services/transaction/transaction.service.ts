@@ -228,6 +228,7 @@ export class TransactionService implements TransactionManager, Organization {
    * @param transaction that needs to be updated
    */
   updatePayment(casenumber: Number, organization: String, paymentDate?: Date): any {
+    organization = organization.toUpperCase();
     this.setOrganization(organization);
     this.getWebToken();
 
@@ -266,7 +267,7 @@ export class TransactionService implements TransactionManager, Organization {
    * @param transaction that needs to be updated
    */
   updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): any {
-
+    organization = organization.toUpperCase();
     this.setOrganization(organization);
     this.getWebToken();
 
@@ -286,7 +287,7 @@ export class TransactionService implements TransactionManager, Organization {
        flag = 'processedByMCO';
          break;
      }
-
+     
      this.requestBody.fcn = 'UpdateF3Request';
      this.requestBody.args = [casenumber.toString(), flag];
 
