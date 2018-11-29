@@ -217,7 +217,7 @@ export class TransactionService implements TransactionManager, Organization {
    * @param transaction that needs to be updated
    */
   updatePayment(casenumber: Number, organization: String, paymentDate?: Date): any {
-    this.setOrganization('MCO');
+    this.setOrganization(organization);
     this.getWebToken();
 
 
@@ -230,20 +230,24 @@ export class TransactionService implements TransactionManager, Organization {
      switch (organization) {
        case 'IEES':
        this.requestBody.peers =  ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
+       this.requestBody.args = [{
+
+        caseNumber: casenumber, ProcessedByIEES: 'Y' , PaymentDate: paymentDate
+  
+       }];
          break;
 
        default: this.requestBody.peers = ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
        flag = 'processedByMCO';
+       this.requestBody.args = [{
+
+        caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
+  
+       }];
          break;
      }
 
      this.requestBody.fcn = 'UpdateInvoiceAndPayment';
-     this.requestBody.args = [{
-
-      caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-
-     }];
-
      return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
   }
 
@@ -253,9 +257,51 @@ export class TransactionService implements TransactionManager, Organization {
       .set('Access-Control-Allow-Credentials', 'true');
   }
 
-  updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): Boolean {
+  /**
+   * Calls the blockchain API to update the F3
+   * returns True if the update is successful
+   * @param transaction that needs to be updated
+   */
+  updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): any {
 
-    return true;
+    this.setOrganization(organization);
+    this.getWebToken();
+
+
+    // Construct the request header
+
+    this.setHeaders();
+     // Construct the request body
+     this.requestBody = new RequestBody();
+     let flag = 'processedByMMIS';
+     switch (organization) {
+       case 'MMIS':
+       this.requestBody.peers =  ['peer0.mmis.medicaid.com', 'peer1.mmis.medicaid.com'];
+       this.requestBody.args = [{
+
+        caseNumber: casenumber, ProcessedByMMIS: 'Y' , PaymentDate: paymentDate
+  
+       }];
+         break;
+
+       default: this.requestBody.peers = ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
+       flag = 'processedByMCO';
+       this.requestBody.args = [{
+
+        caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
+  
+       }];
+         break;
+     }
+
+     this.requestBody.fcn = 'UpdateF3Request';
+     this.requestBody.args = [{
+
+      caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
+
+     }];
+
+     return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
   }
 
   private callHyperLedger(url: String, body: any, requestHeaders: HttpHeaders) {

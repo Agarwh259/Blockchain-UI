@@ -240,7 +240,7 @@
                                                 <td><small><b>Processed By MMIS</b></small></td>
                                                 <td style="text-align: center">
                                                     <small>
-                                                        <input [disabled]="userName==='mco'?true:false" type="checkbox" [checked]="item.processedByMMIS=='Y'?true:false" (change)="item.processedByMMIS = !item.processedByMMIS" />
+                                                        <input [disabled]="(userName==='mmis'?false:true) || (item.processedByMMIS == 'Y')" type="checkbox" [checked]="item.processedByMMIS=='Y'?true:false" (change)="item.processedByMMIS = !item.processedByMMIS" />
                                                     </small>
                                                 </td>
                                             </tr>
@@ -248,7 +248,7 @@
                                                 <td><small><b>Processed By MCO</b></small></td>
                                                 <td style="text-align: center">
                                                     <small>
-                                                        <input [disabled]="userName==='mmis'?true:false" type="checkbox" [checked]="item.processedByMCO=='Y'?true:false" (change)="item.processedByMCO = !item.processedByMCO" />
+                                                        <input [disabled]="(userName==='mco'?false:true) || (item.processedByMCO == 'Y')" type="checkbox" [checked]="item.processedByMCO=='Y'?true:false" (change)="item.processedByMCO = !item.processedByMCO" />
                                                     </small>
                                                 </td>
                                             </tr>
@@ -293,7 +293,7 @@
                                         <td><small><b>Processed By IEES</b></small></td>
                                         <td style="text-align: center">
                                             <small>
-                                                <input type="checkbox" [checked]="item.processedByIEES == 'Y'?true:false"
+                                                <input type="checkbox" [disabled]="(userName==='iees'?false:true) || (item.processedByIEES == 'Y')" [checked]="item.processedByIEES == 'Y'?true:false"
                                                     (change)="item.processedByIEES = !item.ProcessedByIEES" />
                                             </small>
                                         </td>
@@ -348,7 +348,7 @@
                                         <td><small><b>Processed By IEES</b></small></td>
                                         <td style="text-align: center">
                                             <small>
-                                                <input type="checkbox" [checked]="item.processedByIEES == 'Y' ?true:false"
+                                                <input type="checkbox" [disabled]="(userName==='iees'?false:true) || (item.processedByIEES == 'Y')" [checked]="item.processedByIEES == 'Y' ?true:false"
                                                     (change)="item.processedByIEES = !item.ProcessedByIEES" />
                                             </small>
                                         </td>
