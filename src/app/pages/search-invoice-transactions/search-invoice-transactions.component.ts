@@ -9,6 +9,8 @@ import { TransactionService } from 'src/app/shared/services/transaction/transact
 import { LoggerService } from 'src/app/shared/services/logging/logger.service';
 import Loglevel from 'src/app/shared/models/logging/loglevel.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { NotificationsService, NotificationType } from 'angular2-notifications';
+
 
 @Component({
   selector: 'app-search-invoice-transactions',
@@ -30,7 +32,8 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
   searchInvoiceEntity : PaymentSearchTransaction;
 
   constructor(private spinner: NgxSpinnerService,private data: DataService, private modalService: NgbModal,
-    private transactionService: TransactionService,private logger: LoggerService) { }
+    private transactionService: TransactionService,private logger: LoggerService
+    ,private _service: NotificationsService) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -65,7 +68,8 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
     this.modalTransactionDetails = this.invoiceFilteredRecords.filter(function (el) {
       return el.transactionId === ClickedTransactionId
     });
-
+    
+    console.log(this.modalTransactionDetails);
     this.modalTransactionDetails.forEach(item => {
       item.hidden = true;
     });
@@ -109,6 +113,7 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
             processedByMCO: res.processedByMCO
           }         
         );
+        
         this.spinner.hide();
         }
     )
@@ -119,5 +124,33 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
       }
     )
   }
+
+SubmitDetails(item)
+{
+  console.log(item);
+  console.log(this.userName);
+  if(this.userName === 'iees' && item.processedByIEES === 'Y')
+  {
+    if(item.transactionType === 'Invoice')
+    {
+      console.log(item);
+      this.transactionService.updatePayment(item.caseNumber, this.userName)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+         // alert("submission successful");
+         this._service.create('Success','"Invoice processed successfully"',NotificationType.Success);
+       
+        })
+      .catch(error => {
+        console.log(error);
+        console.log(error.status);
+        this._service.create('Error','"Something went wrong. Unable to submit transaction.!"',NotificationType.Error);
+     
+      });
+    }
+  }
+}
 
 }

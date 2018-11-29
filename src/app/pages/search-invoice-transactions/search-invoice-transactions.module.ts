@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './search-invoice-transactions.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { SearchInvoiceTransactionsComponent } from './search-invoice-transactions.component';
-
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
     imports: [
@@ -12,7 +12,8 @@ import { SearchInvoiceTransactionsComponent } from './search-invoice-transaction
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        routing
+        routing,
+        SimpleNotificationsModule.forRoot()
     ],
     declarations: [
         SearchInvoiceTransactionsComponent    ]
