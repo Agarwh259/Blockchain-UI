@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
 import { LoggerService } from 'src/app/shared/services/logging/logger.service';
 import Loglevel from 'src/app/shared/models/logging/loglevel.enum';
+import { NotificationsService, NotificationType } from 'angular2-notifications';
 import { EligibilityTransaction } from 'src/app/shared/models/transaction/eligibility';
 
 @Component({
@@ -31,7 +32,8 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
   searchEligibilityEntity : EligibilitySearchTransaction;
 
   constructor(private data : DataService, private modalService: NgbModal,
-    private spinner: NgxSpinnerService, private transactionService: TransactionService , private logger: LoggerService ) { }
+    private spinner: NgxSpinnerService, private transactionService: TransactionService , 
+    private logger: LoggerService, private _service: NotificationsService ) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -86,6 +88,7 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
 
   getSearchResults(entity : EligibilitySearchTransaction)
   {
+    this.spinner.show();
     this.showSearchResults = true;
     this.eligibilityFilteredRecords = [];
     this.transactionService.searchEligibility( +entity.caseNumber , 'IEES').then(
@@ -140,19 +143,6 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
 
       (res) => { this.logger.Log(res, Loglevel.Error); }
     );
-
-
-    // this.eligibilityFilteredRecords = this.rawSearchResults.filter(function(el){
-    //   return el.caseNumber == entity.caseNumber;
-    // });
-
-    this.spinner.show();
-
-    setTimeout(() => {
-      /** spinner ends after 5 seconds */
-      this.spinner.hide();
-  }, 5000);
-
 }
 
 SubmitDetails(item){
@@ -165,12 +155,10 @@ SubmitDetails(item){
     .updateEligibility(item.caseNumber, this.userName)
     .then(result =>
       {
-        console.log(result);
-        console.log(result.status);
+        this._service.create('Success','"Updated successfully"',NotificationType.Success);
       })
     .catch(error => {
-      console.log(error);
-      console.log(error.status);
+      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
     });
     }  
     else if(item.transactionType == 'Payment')
@@ -179,12 +167,10 @@ SubmitDetails(item){
     .updatePayment(item.caseNumber, this.userName)
     .then(result =>
       {
-        console.log(result);
-        console.log(result.status);
+        this._service.create('Success','"Updated successfully"',NotificationType.Success);
       })
     .catch(error => {
-      console.log(error);
-      console.log(error.status);
+      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
     });
     }    
   }
@@ -194,12 +180,10 @@ SubmitDetails(item){
     .updateEligibility(item.caseNumber, this.userName)
     .then(result =>
       {
-        console.log(result);
-        console.log(result.status);
+        this._service.create('Success','"Updated successfully"',NotificationType.Success);
       })
     .catch(error => {
-      console.log(error);
-      console.log(error.status);
+      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
     });
   }
   else if(this.userName = 'iees' && item.processedByIEES == 'Y')
@@ -208,15 +192,12 @@ SubmitDetails(item){
     .updatePayment(item.caseNumber, this.userName)
     .then(result =>
       {
-        console.log(result);
-        console.log(result.status);
+        this._service.create('Success','"Updated successfully"',NotificationType.Success);
       })
     .catch(error => {
-      console.log(error);
-      console.log(error.status);
+      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
     });
   }
 }
-
 
 }
