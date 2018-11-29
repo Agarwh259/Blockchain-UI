@@ -9,7 +9,7 @@ import TransactionType from '../../models/transaction/transaction-type.enum';
 import { PaymentTransaction } from '../../models/transaction/payment';
 import { EligibilityTransaction } from '../../models/transaction/eligibility';
 import { Organization } from '../../models/user/organization';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RequestBody } from '../../models/transaction/requestbody';
 import { Guid } from 'guid-typescript';
 
@@ -233,7 +233,7 @@ export class TransactionService implements TransactionManager, Organization {
        this.requestBody.args = [{
 
         caseNumber: casenumber, ProcessedByIEES: 'Y' , PaymentDate: paymentDate
-  
+
        }];
          break;
 
@@ -242,7 +242,7 @@ export class TransactionService implements TransactionManager, Organization {
        this.requestBody.args = [{
 
         caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-  
+
        }];
          break;
      }
@@ -280,7 +280,7 @@ export class TransactionService implements TransactionManager, Organization {
        this.requestBody.args = [{
 
         caseNumber: casenumber, ProcessedByMMIS: 'Y' , PaymentDate: paymentDate
-  
+
        }];
          break;
 
@@ -289,7 +289,7 @@ export class TransactionService implements TransactionManager, Organization {
        this.requestBody.args = [{
 
         caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-  
+
        }];
          break;
      }
@@ -316,4 +316,37 @@ export class TransactionService implements TransactionManager, Organization {
       .then(this.getResponse)
       .catch(this.handleError);
   }
+
+
+  searchEligibility(casenumber: Number, organization: String): any {
+    const caseToSearch = JSON.stringify(casenumber);
+    this.setOrganization(organization);
+    this.getWebToken();
+    this.setHeaders();
+
+
+
+    const params = new HttpParams()
+      .set('peer', 'peer0.iees.medicaid.com')
+      .set('fcn', 'QueryForF3Request').append('args', JSON.stringify([caseToSearch]));
+
+   // this._logger.Log(params, Loglevel.Info);
+
+    return this.queryHyperLedger(this.urlmanager.submitEligibility.toString(), params);
+  }
+  searchPayment(casenumber: Number): Transaction[] {
+    return null;
+  }
+
+  private queryHyperLedger(url: String, requestParams: HttpParams) {
+    const Url = 'Url: ' + url;
+    const Parameters = 'Request Params: ' + JSON.stringify(requestParams);
+    // this._logger.Log(Url, Loglevel.Info);
+    // this._logger.Log(Parameters, Loglevel.Info);
+    return this.http.get(url as string,  { headers: this.headers, params: requestParams }).
+      toPromise();
+
+  }
+
+
 }

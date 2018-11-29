@@ -6,6 +6,9 @@ import { EligibilitySearchTransaction } from 'src/app/shared/models/transaction/
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
+import { LoggerService } from 'src/app/shared/services/logging/logger.service';
+import Loglevel from 'src/app/shared/models/logging/loglevel.enum';
 
 @Component({
   selector: 'app-search-eligibility-transactions',
@@ -27,7 +30,7 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
   searchEligibilityEntity : EligibilitySearchTransaction;
 
   constructor(private data : DataService, private modalService: NgbModal,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService, private transactionService: TransactionService , private logger: LoggerService ) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -55,16 +58,6 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
 
   }
 
-  // GetEligibilityTransaction()
-  // {
-  //   this.showSearchResults = true;
-  //   this.rawSearchResults = this.data.getSearchResult();
-
-  //   this.eligibilityFilteredRecords = this.rawSearchResults.filter(function (el) {
-  //     return el.TransactionType == TransactionType.Eligibility
-  //   });
-  // }
-
   openModal(content, ClickedTransactionId) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
     }, (reason) => {
@@ -86,20 +79,46 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
     item.hidden = false;
   }
 
-  HideDetails(item) {     
+  HideDetails(item) {
     item.hidden = true;
   }
 
   getSearchResults(entity : EligibilitySearchTransaction)
   {
     this.showSearchResults = true;
-    this.rawSearchResults = this.data.getEligibilityData().filter(function(el){
-      return el.transactionType === TransactionType.Eligibility
-    })
-    
-    this.eligibilityFilteredRecords = this.rawSearchResults.filter(function(el){
-      return el.caseNumber == entity.caseNumber;
-    });
+    this.eligibilityFilteredRecords = [];
+    this.transactionService.searchEligibility( +entity.caseNumber , 'IEES').then(
+
+      (res) => { this.logger.Log(res, Loglevel.Warning);
+
+
+          this.eligibilityFilteredRecords.push(
+
+            {
+              caseNumber : res.caseNumber,
+              maidCardNumber: res.maidCardNumber,
+              issuerId: res.issuerId,
+              eligibilityStartDate: res.eligibilityStartDate,
+              enrollmentStartDate: res.enrollmentStartDate,
+              processedByMMIS: res.processedByMMIS,
+              processedByMCO: res.processedByMCO,
+              transactionId : res.transactionId
+
+            }
+          );
+
+          this.spinner.hide();
+
+      }
+    ).catch(
+
+      (res) => { this.logger.Log(res, Loglevel.Error); }
+    );
+
+
+    // this.eligibilityFilteredRecords = this.rawSearchResults.filter(function(el){
+    //   return el.caseNumber == entity.caseNumber;
+    // });
 
     this.spinner.show();
 
@@ -107,7 +126,7 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
   }, 5000);
-  
+
 }
 
 
