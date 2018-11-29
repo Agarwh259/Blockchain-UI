@@ -6,7 +6,7 @@ export interface PaymentTransaction extends Transaction {
     invoiceDate: Date;
     dueDate: Date;
     premiumAmount: Number;
-    paymentStatus: Boolean;
+    paymentStatus: string;
     paymentDate?: Date;
     processedByIEES: String;
     processedByMCO: String;

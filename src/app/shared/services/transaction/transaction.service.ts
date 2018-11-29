@@ -193,7 +193,7 @@ export class TransactionService implements TransactionManager, Organization {
       dueDate: transaction.dueDate,
       premiumAmount: +transaction.premiumAmount,
       paymentStatus: transaction.paymentStatus,
-      paymentDate: transaction.paymentDate,
+      paymentDate: (transaction.paymentDate === undefined)?'':transaction.paymentDate,
       processedByIEES: 'N',
       processedByMCO: 'N'
     };

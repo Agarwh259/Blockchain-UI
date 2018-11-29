@@ -6,6 +6,8 @@ import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
 import { PaymentStatus } from 'src/app/shared/models/transaction/payment-status.enum';
 import { NotificationsService, NotificationType } from 'angular2-notifications';
+import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-submit-invoice-transactions',
@@ -25,7 +27,8 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
     position:["top","right"]
       };
 
-  constructor(private _service: NotificationsService) {
+  constructor(private transactionservice: TransactionService, private spinner: NgxSpinnerService
+    ,private _service: NotificationsService) {
 
   }
 
@@ -35,13 +38,14 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
       transactionType : TransactionType.Invoice,
       caseNumber : undefined,
       coverageMonth : undefined,
-      issuerId : undefined,
+      issuerId : 70003,
       invoiceDate : undefined,
       dueDate : undefined,
-      premiumAmount : undefined,
-      paymentStatus : undefined,
-      processedByIEES : undefined,
-      processedByMCO: undefined
+      premiumAmount : 1.00,
+      paymentStatus : 'N',
+      processedByIEES : 'N',
+      processedByMCO: 'N',
+      paymentDate : undefined
     }
 
     this.issuerList = [
@@ -65,6 +69,24 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
 
   submitInvoiceTransaction(newInvoiceEntity : PaymentTransaction) : void
   {
-    this._service.create('Success','"Payment submitted successfully"',NotificationType.Success);
+    console.log(newInvoiceEntity);
+      this.spinner.show();
+     this.transactionservice
+      .submit(newInvoiceEntity)
+      .then(result =>
+        {
+          console.log("inside then");
+          console.log(result);
+          console.log(result.status);
+          this.spinner.hide();
+          this._service.create('Success','"Invoice submitted successfully"',NotificationType.Success);
+        })
+      .catch(error => {
+        console.log("inside catch");
+        console.log(error);
+        this.spinner.hide();
+        console.log(error.status);
+        this._service.create('Error','"Something went wrong. Unable to submit transaction.!"',NotificationType.Error);
+      });
   }
 }
