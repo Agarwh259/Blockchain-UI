@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../../../../shared/services/data.service';
+import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
 
 @Component({
   selector: 'app-basic-tables',
@@ -16,7 +17,7 @@ export class BasicTablesComponent implements OnInit {
   modalTransactionDetails = [];
   dummyData = [];
 
-  constructor(private data: DataService, private modalService: NgbModal) { }
+  constructor(private data: DataService, private modalService: NgbModal, private transactionservice: TransactionService) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -36,66 +37,6 @@ export class BasicTablesComponent implements OnInit {
         return (el.processedByIEES === 'N')
       });
     }
-
-    // this.default_data = [
-    //   { caseNumber: '34532423', maidnumber: '123534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '14532423', maidnumber: '133534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '24532423', maidnumber: '953534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '64532423', maidnumber: '753534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '74532423', maidnumber: '433534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '94532423', maidnumber: '653534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '24532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" },
-    //   { caseNumber: '34532423', maidnumber: '253534543535', issuerId: '234234',elgStart:'02/01/2016',enrlStart:'02/02/2016',trasId:'ea54ca7f-2615-4d81-a0c6-653a458e352c',createDate: '02/02/2018',transactionType:"Eligibility" }
-
-    // ];
-
-    // this.default_iees_data = [
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '14532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '24532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '64532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '74532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '94532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '24532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' },
-    //   { caseNumber: '34532423', coveragemonth: '02/01/2016', PremiumAmount: '234234/-', trasId: 'ea54ca7f-2615-4d81-a0c6-653a458e352c', createDate: '02/02/2018' }
-
-    // ];
   }
 
   openModal(content, ClickedTransactionId) {
@@ -121,6 +62,69 @@ export class BasicTablesComponent implements OnInit {
 
   HideDetails(item) {     
     item.hidden = true;
+  }
+
+  SubmitDetails(item){
+    debugger;
+    if(this.userName == 'mco' && item.processedByMCO == 'Y')
+    {
+      if(item.transactionType == 'Eligibility')
+      {
+        this.transactionservice
+      .updateEligibility(item.caseNumber, this.userName)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+        })
+      .catch(error => {
+        console.log(error);
+        console.log(error.status);
+      });
+      }  
+      else if(item.transactionType == 'Payment')
+      {
+        this.transactionservice
+      .updatePayment(item.caseNumber, this.userName)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+        })
+      .catch(error => {
+        console.log(error);
+        console.log(error.status);
+      });
+      }    
+    }
+    else if(this.userName == 'mmis' && item.processedByMMIS == 'Y')
+    {
+      this.transactionservice
+      .updateEligibility(item.caseNumber, this.userName)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+        })
+      .catch(error => {
+        console.log(error);
+        console.log(error.status);
+      });
+    }
+    else if(this.userName = 'iees' && item.processedByIEES == 'Y')
+    {
+      this.transactionservice
+      .updatePayment(item.caseNumber, this.userName)
+      .then(result =>
+        {
+          console.log(result);
+          console.log(result.status);
+        })
+      .catch(error => {
+        console.log(error);
+        console.log(error.status);
+      });
+    }
   }
 
 }
