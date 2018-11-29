@@ -5,6 +5,10 @@ import { PaymentSearchTransaction } from 'src/app/shared/models/transaction/paym
 import { Property } from '../property';
 import { IssuerType } from 'src/app/shared/models/transaction/issuer-type.enum';
 import TransactionType from 'src/app/shared/models/transaction/transaction-type.enum';
+import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
+import { LoggerService } from 'src/app/shared/services/logging/logger.service';
+import Loglevel from 'src/app/shared/models/logging/loglevel.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-search-invoice-transactions',
@@ -25,7 +29,8 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
 
   searchInvoiceEntity : PaymentSearchTransaction;
 
-  constructor(private data: DataService, private modalService: NgbModal) { }
+  constructor(private spinner: NgxSpinnerService,private data: DataService, private modalService: NgbModal,
+    private transactionService: TransactionService,private logger: LoggerService) { }
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
@@ -52,21 +57,12 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
     ];
   }
 
-  // GetInvoiceTransaction() {
-  //   this.showSearchResults = true;
-  //   this.rawSearchResults = this.data.getSearchResult();
-
-  //   this.invoiceFilteredRecords = this.rawSearchResults.filter(function (el) {
-  //     return el.TransactionType == "Invoice"
-  //   });
-  // }
-
   openModal(content, ClickedTransactionId) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
     }, (reason) => {
     });
 
-    this.modalTransactionDetails = this.rawSearchResults.filter(function (el) {
+    this.modalTransactionDetails = this.invoiceFilteredRecords.filter(function (el) {
       return el.transactionId === ClickedTransactionId
     });
 
@@ -88,15 +84,40 @@ export class SearchInvoiceTransactionsComponent implements OnInit {
 
   getSearchResults(entity : PaymentSearchTransaction)
   {
+    this.spinner.show();
     console.log(entity.caseNumber);
     this.showSearchResults = true;
-    this.rawSearchResults = this.data.getInvoiceAndPaymentData().filter(function(el){
-      return el.transactionType === TransactionType.Invoice
-    })
-    
-    this.invoiceFilteredRecords = this.rawSearchResults.filter(function(el){
-      return el.caseNumber == entity.caseNumber;
-    });
+
+    this.invoiceFilteredRecords = [];
+
+    this.transactionService.searchPayment(+entity.caseNumber , 'MCO')
+    .then(
+      (res) => { this.logger.Log(res, Loglevel.Warning);
+        this.invoiceFilteredRecords.push(
+          {
+            transactionId : res.transactionId,
+            transactionType : res.transactionType,
+            caseNumber : res.caseNumber,
+            coverageMonth: res.coverageMonth,
+            issuerId: res.issuerId,
+            invoiceDate: res.invoiceDate,
+            dueDate: res.dueDate,
+            premiumAmount: res.premiumAmount,
+            paymentStatus: res.paymentStatus,
+            paymentDate : res.paymentDate,
+            processedByIEES: res.processedByIEES,
+            processedByMCO: res.processedByMCO
+          }         
+        );
+        this.spinner.hide();
+        }
+    )
+    .catch(
+      (res) => { 
+        this.logger.Log(res, Loglevel.Error); 
+        this.spinner.hide();
+      }
+    )
   }
 
 }

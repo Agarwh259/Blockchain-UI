@@ -38,8 +38,9 @@
         </div>
         <div class="row col-md-12" style="margin-top: 5px">
             <div class="col-md-6 row">
-                <label class="col-md-5" style="margin-top:1%">Create Date:</label>
+                <!-- <label class="col-md-5" style="margin-top:1%">Create Date:</label>
                 <input type="date" class="form-control col-md-6" name="createDate" [(ngModel)]="searchInvoiceEntity.createDate">
+             -->
             </div>
             <div class="col-md-6 row">
                 <label class="col-md-6" style="margin-top:1%"></label>
@@ -60,7 +61,7 @@
             <th>Premium Amount</th>
             <th>Processed By IEES</th>
             <th>Transaction Id</th>
-            <th>Create Date</th>
+            <!-- <th>Create Date</th> -->
         </tr>
     </thead>
     <tbody>
@@ -76,14 +77,14 @@
                 {{txn.premiumAmount | currency}}
             </td>
             <td>
-                {{txn.processedByIEES?'Yes':'No'}}
+                {{txn.processedByIEES==='Y'?'Yes':'No'}}
             </td>
             <td>
                 {{txn.transactionId}}
             </td>
-            <td>
+            <!-- <td>
                 {{txn.createDate | date: 'dd/MM/yyyy'}}
-            </td>
+            </td> -->
         </tr>
     </tbody>
 </table>
