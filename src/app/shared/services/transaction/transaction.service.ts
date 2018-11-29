@@ -73,7 +73,10 @@ export class TransactionService implements TransactionManager, Organization {
   }
 
  private submitEligibility(transaction: EligibilityTransaction): Promise<any> {
-    this.setOrganization('IEES');
+
+  // tslint:disable-next-line:no-debugger
+  debugger;
+  this.setOrganization('IEES');
     this.getWebToken();
 
     // Construct the request header
@@ -81,27 +84,33 @@ export class TransactionService implements TransactionManager, Organization {
   this.setHeaders();
 
    this.tranId = transaction.transactionId;
+   const tranIdasString = this.tranId.toString();
   // Log the transactionId for verification.
    this._logger.Log(this.tranId, Loglevel.Info);
     // Construct the request body
     this.requestBody = new RequestBody();
     this.requestBody.peers = ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
     this.requestBody.fcn = 'CreateF3Request';
-    this.requestBody.args = [ {
-      transactionId: this.tranId.toString(),
-      transactionType: transaction.transactionType,
-      maidCardNumber: transaction.maidCardNumber,
-      caseNumber: transaction.caseNumber,
-      SSN: transaction.ssn,
-      firstName: transaction.firstName,
+
+    // tslint:disable-next-line:quotemark
+    // tslint:disable-next-line:max-line-length
+    // const args = ["{\"transactionId\":\"7eb11e46-e29a-4dac-9b08-2681d789eb1f\",\"transactionType\":\"Eligibility\",\"maidCardNumber\":2000000001,\"caseNumber\":1090909090,\"SSN\":123456789,\"firstName\":\"John\",\"lastName\":\"Doe\",\"dateOfBirth\":\"1980-01-01\",\"gender\":\"M\",\"addressLine1\":\"123 Main St\",\"city\":\"Lexington\",\"stateCode\":\"KY\",\"zipCode\":40509,\"caseCountableIncome\":999,\"programCode\":\"XA\",\"statusCode\":\"X3\",\"IMIDCode\":\"X3\",\"eligibilityStartDate\":\"2019-01-01\",\"eligibilityEndDate\":\"9999-12-31\",\"enrollmentStartDate\":\"2019-01-01\",\"enrollmentEndDate\":\"9999-12-31\",\"issuerId\":70001,\"eligibilityType\":\"C\",\"KYHplanType\":\"A\",\"KYHPremiumPlanCode\":\"Y\",\"KYHCopayIndicator\":\"N\",\"KYHPregnancyIndicator\":\"N\",\"KYHIndStartDate\":\"2019-01-01\",\"KYHIndEndDate\":\"9999-12-31\",\"KYHPremiumAmt\":15,\"KYHPremiumStartDate\":\"2019-01-01\",\"KYHPremiumEndDate\":\"9999-12-31\",\"processedByMMIS\":\"N\",\"processedByMCO\":\"N\"}"] ;
+
+    const reqBodyJSON = {
+      transactionId: tranIdasString as string,
+      transactionType: transaction.transactionType as string,
+      maidCardNumber: +transaction.maidCardNumber ,
+      caseNumber: +transaction.caseNumber,
+      SSN: +transaction.ssn,
+      firstName: transaction.firstName as string,
       lastName: transaction.lastName,
       dateOfBirth: transaction.dateOfBirth,
       gender: transaction.gender,
       addressLine1: transaction.addressLine,
       city: transaction.city,
       stateCode: transaction.stateCode,
-      zipCode: transaction.zipCode,
-      caseCountableIncome: transaction.caseCountableIncome,
+      zipCode: +transaction.zipCode,
+      caseCountableIncome: +transaction.caseCountableIncome,
       programCode: transaction.programCode,
       statusCode: transaction.statusCode,
       IMIDCode: transaction.imidCode,
@@ -109,7 +118,7 @@ export class TransactionService implements TransactionManager, Organization {
       eligibilityEndDate: transaction.eligibilityEndDate,
       enrollmentStartDate: transaction.enrollmentStartDate,
       enrollmentEndDate: transaction.enrollmentEndDate,
-      issuerId: transaction.issuerId,
+      issuerId: +transaction.issuerId,
       eligibilityType: transaction.eligibilityType,
       KYHplanType: transaction.kyhPlanType,
       KYHPremiumPlanCode: transaction.kyhPremiumPlanCode,
@@ -117,13 +126,18 @@ export class TransactionService implements TransactionManager, Organization {
       KYHPregnancyIndicator: transaction.kyhPregnancyIndicator,
       KYHIndStartDate: transaction.kyhIndStartDate,
       KYHIndEndDate: transaction.kyhIndEndDate,
-      KYHPremiumAmt: transaction.kyhPremiumAmt,
+      KYHPremiumAmt: +transaction.kyhPremiumAmt,
       KYHPremiumStartDate: transaction.kyhPremiumStartDate,
       KYHPremiumEndDate: transaction.kyhPremiumEndDate,
       processedByMMIS: transaction.processedByMMIS,
       processedByMCO: transaction.processedByMCO
-  }];
+  };
 
+    // const reqBodyString = JSON.stringify(reqBodyJSON).replace(/'/g, "\\'") ;
+
+    // this.requestBody.args = [ reqBodyString ];
+
+        this.setRequestBody(reqBodyJSON);
     // We have the transaction and the web token. Now,we can make the Http Call.
 
   return this.callHyperLedger(this.urlmanager.submitEligibility.toString(), this.requestBody, this.headers );
@@ -155,28 +169,36 @@ export class TransactionService implements TransactionManager, Organization {
     this.requestBody = new RequestBody();
     this.requestBody.peers =  ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
     this.requestBody.fcn = 'GenerateInvoice';
-    this.requestBody.args = [{
+
+
+    const requestBodyJSON = {
 
       transactionId: this.tranId.toString(),
       transactionType: transaction.transactionType,
-      caseNumber: transaction.caseNumber,
+      caseNumber: +transaction.caseNumber,
       coverageMonth: transaction.coverageMonth,
       invoiceDate: transaction.invoiceDate,
-      issuerId: transaction.issuerId,
+      issuerId: +transaction.issuerId,
       dueDate: transaction.dueDate,
-      premiumAmount: transaction.premiumAmount,
+      premiumAmount: +transaction.premiumAmount,
       paymentStatus: transaction.paymentStatus,
       paymentDate: transaction.paymentDate,
       processedByIEES: transaction.processedByIEES  ? undefined : 'N',
       processedByMCO: transaction.processedByMCO ? undefined : 'N'
 
-    }];
+    };
 
+    this.setRequestBody(requestBodyJSON);
     return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
   }
 
 
 
+
+  private setRequestBody(requestBodyJSON: any) {
+    const reqBodyString = JSON.stringify(requestBodyJSON).replace(/'/g, "\\'");
+    this.requestBody.args = [reqBodyString];
+  }
 
   /**
    * Calls the blockchain API to get all the transactions
@@ -226,8 +248,9 @@ export class TransactionService implements TransactionManager, Organization {
   }
 
   private setHeaders() {
-    this.headers = new HttpHeaders().set('JWT', this._jwtCode as string)
-      .set('Content-Type', 'application/json');
+    this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + this._jwtCode as string)
+      .set('Content-Type', 'application/json')
+      .set('Access-Control-Allow-Credentials', 'true');
   }
 
   updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): Boolean {
@@ -238,7 +261,7 @@ export class TransactionService implements TransactionManager, Organization {
   private callHyperLedger(url: String, body: any, requestHeaders: HttpHeaders) {
     const Url = 'Url: ' + url;
     const reqBody = 'Request Body: ' + JSON.stringify( body);
-    const Headers = 'Request Headers: ' + requestHeaders;
+    const Headers = 'Request Headers: ' + JSON.stringify(requestHeaders);
     this._logger.Log(Url, Loglevel.Info);
     this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);

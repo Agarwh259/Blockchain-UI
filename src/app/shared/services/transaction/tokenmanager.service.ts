@@ -11,15 +11,15 @@ export class TokenmanagerService {
     switch (organization) {
       case 'MCO':
         // tslint:disable-next-line:max-line-length
-        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzNzA2ODEsInVzZXJuYW1lIjoiQWJlbEpvaG5wYXNzMTIzIiwib3JnTmFtZSI6Ik1jbyIsImlhdCI6MTU0MzMzNDY4MX0.rScpNDN0f24A-i5JWCCAT-VHnmRhVFXoAMu0OPoCInA';
+        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOjg2NDAwMDAwMDAwMDAwMDAwMCwidXNlcm5hbWUiOiJBYmVsSm9obnBhc3MxMjMiLCJvcmdOYW1lIjoiTWNvIiwiaWF0IjoxNTQzNDI5NTcxfQ.aSks6kk_xxIriRUKNvDXr84198XzIKRd-nfUd_WWj3k';
         break;
       case 'MMIS':
         // tslint:disable-next-line:max-line-length
-        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzNzA2ODAsInVzZXJuYW1lIjoiTWFjZXlXaWxsaWFtc3Bhc3MxMjMiLCJvcmdOYW1lIjoiTW1pcyIsImlhdCI6MTU0MzMzNDY4MH0.cQJoMGk3s1ezSRLihHB1enJibu_HemOwEMlV-9oZyiQ';
+        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOjg2NDAwMDAwMDAwMDAwMDAwMCwidXNlcm5hbWUiOiJNYWNleVdpbGxpYW1zcGFzczEyMyIsIm9yZ05hbWUiOiJNbWlzIiwiaWF0IjoxNTQzNDI5NTcwfQ.vfpW0fBLxm6DjHmvbOFz54hdj3Uz_ZmoY0RXPFPr41o';
         break;
       default:
         // tslint:disable-next-line:max-line-length
-        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDMzNzA2NzksInVzZXJuYW1lIjoiQW5hR3V0bWFubnBhc3MxMjMiLCJvcmdOYW1lIjoiSWVlcyIsImlhdCI6MTU0MzMzNDY3OX0.L7pbodQckp3fceq1nvemUQhu6G8FPJfLX7YGpf5lmYQ';
+        this.tokenCode = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOjg2NDAwMDAwMDAwMDAwMDAwMCwidXNlcm5hbWUiOiJBbmFHdXRtYW5ucGFzczEyMyIsIm9yZ05hbWUiOiJJZWVzIiwiaWF0IjoxNTQzNDI5NTY4fQ.TBxSigCE2RukzVZCp7-Eyk-4PVX_oLDrduyqnCNCiVU';
         break;
     }
 
