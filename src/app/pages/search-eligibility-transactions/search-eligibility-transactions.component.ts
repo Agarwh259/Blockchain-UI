@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
 import { LoggerService } from 'src/app/shared/services/logging/logger.service';
 import Loglevel from 'src/app/shared/models/logging/loglevel.enum';
+import { EligibilityTransaction } from 'src/app/shared/models/transaction/eligibility';
 
 @Component({
   selector: 'app-search-eligibility-transactions',
@@ -63,7 +64,7 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
     }, (reason) => {
     });
 
-    this.modalTransactionDetails = this.rawSearchResults.filter(function (el) {
+    this.modalTransactionDetails = this.eligibilityFilteredRecords.filter(function (el) {
       return el.transactionId == ClickedTransactionId
     });
 
@@ -95,15 +96,40 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
           this.eligibilityFilteredRecords.push(
 
             {
-              caseNumber : res.caseNumber,
+              transactionId: res.transactionId,
+              transactionType : res.transactionType,
               maidCardNumber: res.maidCardNumber,
-              issuerId: res.issuerId,
+              caseNumber : res.caseNumber,
+              ssn: res.SSN,
+              firstName: res.firstName,
+              lastName: res.lastName,
+              dateOfBirth: res.dateOfBirth,
+              gender: res.gender,
+              addressLine: res.addressLine1,
+              city: res.city,
+              stateCode: res.stateCode,
+              zipCode: res.zipCode,
+              caseCountableIncome: res.caseCountableIncome,
+              programCode: res.programCode,
+              statusCode: res.stateCode,
+              imidCode: res.IMIDCode,
               eligibilityStartDate: res.eligibilityStartDate,
+              eligibilityEndDate: res.eligibilityEndDate,
               enrollmentStartDate: res.enrollmentStartDate,
+              enrollmentEndDate : res.enrollmentEndDate,
+              issuerId: res.issuerId,
+              eligibilityType: res.eligibilityType,
+              kyhPlanType: res.KYHplanType,
+              kyhPremiumPlanCode: res.KYHPremiumPlanCode,
+              kyhCopayIndicator: res.KYHCopayIndicator,
+              kyhPregnancyIndicator: res.KYHPregnancyIndicator,
+              kyhIndStartDate: res.KYHIndStartDate,
+              kyhIndEndDate: res.KYHIndEndDate,
+              kyhPremiumAmt: res.KYHPremiumAmt,
+              kyhPremiumStartDate : res.KYHPremiumStartDate,
+              kyhPremiumEndDate : res.KYHPremiumEndDate,
               processedByMMIS: res.processedByMMIS,
-              processedByMCO: res.processedByMCO,
-              transactionId : res.transactionId
-
+              processedByMCO: res.processedByMCO
             }
           );
 
