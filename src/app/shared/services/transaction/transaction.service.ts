@@ -51,17 +51,19 @@ export class TransactionService implements TransactionManager, Organization {
   submit(transaction: Transaction): Promise<any> {
     this._logger.Log(
       'Submitting the Transaction : ' + transaction);
+      let returnPromise ;
     // call the blockchain API to submit the transaction
     switch (transaction.transactionType) {
       case TransactionType.Invoice:
-      return  this.submitInvoice(transaction as PaymentTransaction);
+      returnPromise = this.submitInvoice(transaction as PaymentTransaction);
         break;
 
       default:
-      return this.submitEligibility(transaction as EligibilityTransaction);
+      returnPromise = this.submitEligibility(transaction as EligibilityTransaction);
         break;
     }
-     return ;
+
+    return returnPromise;
   }
 
   private setOrganization(orgCode: String) {
@@ -75,7 +77,7 @@ export class TransactionService implements TransactionManager, Organization {
  private submitEligibility(transaction: EligibilityTransaction): Promise<any> {
 
   // tslint:disable-next-line:no-debugger
-  debugger;
+
   this.setOrganization('IEES');
     this.getWebToken();
 
@@ -311,10 +313,9 @@ export class TransactionService implements TransactionManager, Organization {
     this._logger.Log(Url, Loglevel.Info);
     this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);
-    return this.http.post(url as string, body, { headers: requestHeaders }).
-      toPromise()
-      .then(this.getResponse)
-      .catch(this.handleError);
+    return this.http.post(url as string, body, { headers: requestHeaders, responseType : 'text' },).
+      toPromise();
+     
   }
 
 

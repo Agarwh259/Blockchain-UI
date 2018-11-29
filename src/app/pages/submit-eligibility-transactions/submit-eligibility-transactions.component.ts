@@ -55,37 +55,37 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
         transactionId : Guid.create(),
         caseNumber : undefined,
         transactionType : TransactionType.Eligibility,
-        maidCardNumber: undefined,
-        ssn: undefined,
-        firstName: undefined,
-        lastName: undefined,
-        dateOfBirth: undefined,
-        gender: undefined,
-        addressLine: undefined,
-        city: undefined,
-        stateCode: undefined,
-        zipCode: undefined,
-        caseCountableIncome: undefined,
-        programCode: undefined,
-        statusCode: undefined,
-        imidCode: undefined,
+        maidCardNumber: '1212121221',
+        ssn: '9999818218',
+        firstName: 'Berry',
+        lastName: 'Allen',
+        dateOfBirth: new Date('01-01-1987'),
+        gender: 'M',
+        addressLine: 'Kentucky',
+        city: 'KY',
+        stateCode: 'KY',
+        zipCode: 12121,
+        caseCountableIncome: 111,
+        programCode: 'MA',
+        statusCode: 'A',
+        imidCode: 'X3',
         eligibilityStartDate: undefined,
         eligibilityEndDate: undefined,
         enrollmentStartDate: undefined,
         enrollmentEndDate: undefined,
-        issuerId: undefined,
-        eligibilityType: undefined,
-        kyhPlanType: undefined,
-        kyhPremiumPlanCode: undefined,
-        kyhCopayIndicator: undefined,
-        kyhPregnancyIndicator: undefined,
+        issuerId: 70001,
+        eligibilityType: 'Y',
+        kyhPlanType: 'Y',
+        kyhPremiumPlanCode: 'Y',
+        kyhCopayIndicator: false,
+        kyhPregnancyIndicator: false,
         kyhIndStartDate: undefined,
         kyhIndEndDate: undefined,
         kyhPremiumAmt: undefined,
         kyhPremiumStartDate: undefined,
         kyhPremiumEndDate: undefined,
-        processedByMMIS: false,
-        processedByMCO: false,
+        processedByMMIS: 'N',
+        processedByMCO: 'N',
       };
 
       this.issuerList = [
@@ -135,12 +135,15 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
       .submit(entity)
       .then(result =>
         {
+          console.log("Inside then :");
           console.log(result);
-          console.log(result.status);
+         console.log(result.status);
           this.spinner.hide();
           this._service.create('Success','"Eligibility submitted successfully"',NotificationType.Success);
         })
       .catch(error => {
+        
+        console.log("Inside catch :");
         console.log(error);
         this.spinner.hide();
         console.log(error.status);
