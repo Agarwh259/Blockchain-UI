@@ -8,6 +8,6 @@ export interface PaymentTransaction extends Transaction {
     premiumAmount: Number;
     paymentStatus: Boolean;
     paymentDate?: Date;
-    processedByIEES: Boolean;
-    processedByMCO: Boolean;
+    processedByIEES: String;
+    processedByMCO: String;
 }

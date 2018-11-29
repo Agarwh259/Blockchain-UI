@@ -30,6 +30,6 @@ export interface EligibilityTransaction extends Transaction {
     kyhPremiumAmt: Number;
     kyhPremiumStartDate?: Date;
     kyhPremiumEndDate?: Date;
-    processedByMMIS: Boolean;
-    processedByMCO: Boolean;
+    processedByMMIS: String;
+    processedByMCO: String;
 }

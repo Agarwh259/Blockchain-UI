@@ -13,12 +13,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RequestBody } from '../../models/transaction/requestbody';
 import { Guid } from 'guid-typescript';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService implements TransactionManager, Organization {
-
   orgCode: String;
   orgTitle: String;
   private readonly _logger: LoggerService;
@@ -30,11 +28,15 @@ export class TransactionService implements TransactionManager, Organization {
    * @param urlmanager contains all the endpoints of the blockchain API/Couchdb
    * @param logger provides an interface to log a message to the console
    */
-  constructor(private urlmanager: UrlmanagerService, private http: HttpClient, logger: LoggerService, tokenmanager: TokenmanagerService) {
-  this._logger = logger;
+  constructor(
+    private urlmanager: UrlmanagerService,
+    private http: HttpClient,
+    logger: LoggerService,
+    tokenmanager: TokenmanagerService
+  ) {
+    this._logger = logger;
     this._logger.Log('Instantiating TransactionService', Loglevel.Info);
     this._tokenManager = tokenmanager;
-
   }
 
   private transactions: Transaction[];
@@ -49,19 +51,18 @@ export class TransactionService implements TransactionManager, Organization {
    * @param transaction that the user wants to submit on to the blockchain
    */
   submit(transaction: Transaction): Promise<any> {
-    this._logger.Log(
-      'Submitting the Transaction : ' + transaction);
+    this._logger.Log('Submitting the Transaction : ' + transaction);
     // call the blockchain API to submit the transaction
     switch (transaction.transactionType) {
       case TransactionType.Invoice:
-      return  this.submitInvoice(transaction as PaymentTransaction);
+        return this.submitInvoice(transaction as PaymentTransaction);
         break;
 
       default:
-      return this.submitEligibility(transaction as EligibilityTransaction);
+        return this.submitEligibility(transaction as EligibilityTransaction);
         break;
     }
-     return ;
+    return;
   }
 
   private setOrganization(orgCode: String) {
@@ -72,24 +73,26 @@ export class TransactionService implements TransactionManager, Organization {
     this._jwtCode = this._tokenManager.getToken(this.orgCode);
   }
 
- private submitEligibility(transaction: EligibilityTransaction): Promise<any> {
-
-  // tslint:disable-next-line:no-debugger
-  debugger;
-  this.setOrganization('IEES');
+  private submitEligibility(transaction: EligibilityTransaction): Promise<any> {
+    // tslint:disable-next-line:no-debugger
+    debugger;
+    this.setOrganization('IEES');
     this.getWebToken();
 
     // Construct the request header
 
-  this.setHeaders();
+    this.setHeaders();
 
-   this.tranId = transaction.transactionId;
-   const tranIdasString = this.tranId.toString();
-  // Log the transactionId for verification.
-   this._logger.Log(this.tranId, Loglevel.Info);
+    this.tranId = transaction.transactionId;
+    const tranIdasString = this.tranId.toString();
+    // Log the transactionId for verification.
+    this._logger.Log(this.tranId, Loglevel.Info);
     // Construct the request body
     this.requestBody = new RequestBody();
-    this.requestBody.peers = ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
+    this.requestBody.peers = [
+      'peer0.iees.medicaid.com',
+      'peer1.iees.medicaid.com'
+    ];
     this.requestBody.fcn = 'CreateF3Request';
 
     // tslint:disable-next-line:quotemark
@@ -99,7 +102,7 @@ export class TransactionService implements TransactionManager, Organization {
     const reqBodyJSON = {
       transactionId: tranIdasString as string,
       transactionType: transaction.transactionType as string,
-      maidCardNumber: +transaction.maidCardNumber ,
+      maidCardNumber: +transaction.maidCardNumber,
       caseNumber: +transaction.caseNumber,
       SSN: +transaction.ssn,
       firstName: transaction.firstName as string,
@@ -129,18 +132,22 @@ export class TransactionService implements TransactionManager, Organization {
       KYHPremiumAmt: +transaction.kyhPremiumAmt,
       KYHPremiumStartDate: transaction.kyhPremiumStartDate,
       KYHPremiumEndDate: transaction.kyhPremiumEndDate,
-      processedByMMIS: transaction.processedByMMIS,
-      processedByMCO: transaction.processedByMCO
-  };
+      processedByMMIS: 'N',
+      processedByMCO: 'N'
+    };
 
     // const reqBodyString = JSON.stringify(reqBodyJSON).replace(/'/g, "\\'") ;
 
     // this.requestBody.args = [ reqBodyString ];
 
-        this.setRequestBody(reqBodyJSON);
+    this.setRequestBody(reqBodyJSON);
     // We have the transaction and the web token. Now,we can make the Http Call.
 
-  return this.callHyperLedger(this.urlmanager.submitEligibility.toString(), this.requestBody, this.headers );
+    return this.callHyperLedger(
+      this.urlmanager.submitEligibility.toString(),
+      this.requestBody,
+      this.headers
+    );
   }
 
   private getResponse(res: Response) {
@@ -157,22 +164,22 @@ export class TransactionService implements TransactionManager, Organization {
     this.setOrganization('MCO');
     this.getWebToken();
 
-
     // Construct the request header
 
     this.setHeaders();
 
-   this.tranId = transaction.transactionId;
-  // Log the transactionId for verification.
-   this._logger.Log(this.tranId, Loglevel.Info);
+    this.tranId = transaction.transactionId;
+    // Log the transactionId for verification.
+    this._logger.Log(this.tranId, Loglevel.Info);
     // Construct the request body
     this.requestBody = new RequestBody();
-    this.requestBody.peers =  ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
+    this.requestBody.peers = [
+      'peer0.mco.medicaid.com',
+      'peer1.mco.medicaid.com'
+    ];
     this.requestBody.fcn = 'GenerateInvoice';
 
-
     const requestBodyJSON = {
-
       transactionId: this.tranId.toString(),
       transactionType: transaction.transactionType,
       caseNumber: +transaction.caseNumber,
@@ -183,20 +190,20 @@ export class TransactionService implements TransactionManager, Organization {
       premiumAmount: +transaction.premiumAmount,
       paymentStatus: transaction.paymentStatus,
       paymentDate: transaction.paymentDate,
-      processedByIEES: transaction.processedByIEES  ? undefined : 'N',
-      processedByMCO: transaction.processedByMCO ? undefined : 'N'
-
+      processedByIEES: 'N',
+      processedByMCO: 'N'
     };
 
     this.setRequestBody(requestBodyJSON);
-    return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
+    return this.callHyperLedger(
+      this.urlmanager.submitPayment.toString(),
+      this.requestBody,
+      this.headers
+    );
   }
 
-
-
-
   private setRequestBody(requestBodyJSON: any) {
-    const reqBodyString = JSON.stringify(requestBodyJSON).replace(/'/g, "\\'");
+    const reqBodyString = JSON.stringify(requestBodyJSON).replace(/'/g, '\\\'');
     this.requestBody.args = [reqBodyString];
   }
 
@@ -216,43 +223,62 @@ export class TransactionService implements TransactionManager, Organization {
    * returns True if the update is successful
    * @param transaction that needs to be updated
    */
-  updatePayment(casenumber: Number, organization: String, paymentDate?: Date): any {
+  updatePayment(
+    casenumber: Number,
+    organization: String,
+    paymentDate?: Date
+  ): any {
     this.setOrganization(organization);
     this.getWebToken();
-
 
     // Construct the request header
 
     this.setHeaders();
-     // Construct the request body
-     this.requestBody = new RequestBody();
-     let flag = 'processedByIEES';
-     switch (organization) {
-       case 'IEES':
-       this.requestBody.peers =  ['peer0.iees.medicaid.com', 'peer1.iees.medicaid.com'];
-       this.requestBody.args = [{
+    // Construct the request body
+    this.requestBody = new RequestBody();
+    let flag = 'processedByIEES';
+    switch (organization) {
+      case 'IEES':
+        this.requestBody.peers = [
+          'peer0.iees.medicaid.com',
+          'peer1.iees.medicaid.com'
+        ];
+        this.requestBody.args = [
+          {
+            caseNumber: casenumber,
+            ProcessedByIEES: 'Y',
+            PaymentDate: paymentDate
+          }
+        ];
+        break;
 
-        caseNumber: casenumber, ProcessedByIEES: 'Y' , PaymentDate: paymentDate
+      default:
+        this.requestBody.peers = [
+          'peer0.mco.medicaid.com',
+          'peer1.mco.medicaid.com'
+        ];
+        flag = 'processedByMCO';
+        this.requestBody.args = [
+          {
+            caseNumber: casenumber,
+            ProcessedByMCO: 'Y',
+            PaymentDate: paymentDate
+          }
+        ];
+        break;
+    }
 
-       }];
-         break;
-
-       default: this.requestBody.peers = ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
-       flag = 'processedByMCO';
-       this.requestBody.args = [{
-
-        caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-
-       }];
-         break;
-     }
-
-     this.requestBody.fcn = 'UpdateInvoiceAndPayment';
-     return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
+    this.requestBody.fcn = 'UpdateInvoiceAndPayment';
+    return this.callHyperLedger(
+      this.urlmanager.submitPayment.toString(),
+      this.requestBody,
+      this.headers
+    );
   }
 
   private setHeaders() {
-    this.headers = new HttpHeaders().set('Authorization', 'Bearer ' + this._jwtCode as string)
+    this.headers = new HttpHeaders()
+      .set('Authorization', ('Bearer ' + this._jwtCode) as string)
       .set('Content-Type', 'application/json')
       .set('Access-Control-Allow-Credentials', 'true');
   }
@@ -262,80 +288,106 @@ export class TransactionService implements TransactionManager, Organization {
    * returns True if the update is successful
    * @param transaction that needs to be updated
    */
-  updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): any {
-
+  updateEligibility(
+    casenumber: Number,
+    organization: String,
+    paymentDate?: Date
+  ): any {
     this.setOrganization(organization);
     this.getWebToken();
-
 
     // Construct the request header
 
     this.setHeaders();
-     // Construct the request body
-     this.requestBody = new RequestBody();
-     let flag = 'processedByMMIS';
-     switch (organization) {
-       case 'MMIS':
-       this.requestBody.peers =  ['peer0.mmis.medicaid.com', 'peer1.mmis.medicaid.com'];
-       this.requestBody.args = [{
+    // Construct the request body
+    this.requestBody = new RequestBody();
+    let flag = 'processedByMMIS';
+    switch (organization) {
+      case 'MMIS':
+        this.requestBody.peers = [
+          'peer0.mmis.medicaid.com',
+          'peer1.mmis.medicaid.com'
+        ];
+        this.requestBody.args = [
+          {
+            caseNumber: casenumber,
+            ProcessedByMMIS: 'Y',
+            PaymentDate: paymentDate
+          }
+        ];
+        break;
 
-        caseNumber: casenumber, ProcessedByMMIS: 'Y' , PaymentDate: paymentDate
+      default:
+        this.requestBody.peers = [
+          'peer0.mco.medicaid.com',
+          'peer1.mco.medicaid.com'
+        ];
+        flag = 'processedByMCO';
+        this.requestBody.args = [
+          {
+            caseNumber: casenumber,
+            ProcessedByMCO: 'Y',
+            PaymentDate: paymentDate
+          }
+        ];
+        break;
+    }
 
-       }];
-         break;
+    this.requestBody.fcn = 'UpdateF3Request';
+    this.requestBody.args = [
+      {
+        caseNumber: casenumber,
+        ProcessedByMCO: 'Y',
+        PaymentDate: paymentDate
+      }
+    ];
 
-       default: this.requestBody.peers = ['peer0.mco.medicaid.com', 'peer1.mco.medicaid.com'];
-       flag = 'processedByMCO';
-       this.requestBody.args = [{
-
-        caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-
-       }];
-         break;
-     }
-
-     this.requestBody.fcn = 'UpdateF3Request';
-     this.requestBody.args = [{
-
-      caseNumber: casenumber, ProcessedByMCO: 'Y' , PaymentDate: paymentDate
-
-     }];
-
-     return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
+    return this.callHyperLedger(
+      this.urlmanager.submitPayment.toString(),
+      this.requestBody,
+      this.headers
+    );
   }
 
   private callHyperLedger(url: String, body: any, requestHeaders: HttpHeaders) {
     const Url = 'Url: ' + url;
-    const reqBody = 'Request Body: ' + JSON.stringify( body);
+    const reqBody = 'Request Body: ' + JSON.stringify(body);
     const Headers = 'Request Headers: ' + JSON.stringify(requestHeaders);
     this._logger.Log(Url, Loglevel.Info);
     this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);
-    return this.http.post(url as string, body, { headers: requestHeaders }).
-      toPromise()
-      .then(this.getResponse)
-      .catch(this.handleError);
+    return this.http
+      .post(url as string, body, { headers: requestHeaders })
+      .toPromise();
   }
-
 
   searchEligibility(casenumber: Number, organization: String): any {
     const caseToSearch = JSON.stringify(casenumber);
     this.setOrganization(organization);
     this.getWebToken();
     this.setHeaders();
-
-
-
     const params = new HttpParams()
       .set('peer', 'peer0.iees.medicaid.com')
-      .set('fcn', 'QueryForF3Request').append('args', JSON.stringify([caseToSearch]));
+      .set('fcn', 'QueryForF3Request')
+      .append('args', JSON.stringify([caseToSearch]));
 
-   // this._logger.Log(params, Loglevel.Info);
+    // this._logger.Log(params, Loglevel.Info);
 
-    return this.queryHyperLedger(this.urlmanager.submitEligibility.toString(), params);
+    return this.queryHyperLedger(
+      this.urlmanager.submitEligibility.toString(),
+      params
+    );
   }
-  searchPayment(casenumber: Number): Transaction[] {
-    return null;
+  searchPayment(casenumber: Number, organization: String): any {
+    const caseToSearch = JSON.stringify(casenumber);
+    this.setOrganization(organization);
+    this.getWebToken();
+    this.setHeaders();
+    const params = new HttpParams()
+      .set('peer', 'peer0.mco.medicaid.com')
+      .set('fcn', 'QueryInvoice')
+      .append('args', JSON.stringify([caseToSearch]));
+    return this.queryHyperLedger(this.urlmanager.baseUrl.toString(), params);
   }
 
   private queryHyperLedger(url: String, requestParams: HttpParams) {
@@ -343,10 +395,8 @@ export class TransactionService implements TransactionManager, Organization {
     const Parameters = 'Request Params: ' + JSON.stringify(requestParams);
     // this._logger.Log(Url, Loglevel.Info);
     // this._logger.Log(Parameters, Loglevel.Info);
-    return this.http.get(url as string,  { headers: this.headers, params: requestParams }).
-      toPromise();
-
+    return this.http
+      .get(url as string, { headers: this.headers, params: requestParams })
+      .toPromise();
   }
-
-
 }

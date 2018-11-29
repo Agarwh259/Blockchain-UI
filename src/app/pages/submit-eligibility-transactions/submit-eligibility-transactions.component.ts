@@ -41,7 +41,7 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     submitPrev() {
       this.currentTab = 'basic';
     }
-   
+
 
     submitPrevElg() {
       this.currentTab = 'elg';
@@ -84,8 +84,8 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
         kyhPremiumAmt: undefined,
         kyhPremiumStartDate: undefined,
         kyhPremiumEndDate: undefined,
-        processedByMMIS: false,
-        processedByMCO: false,
+        processedByMMIS: 'N',
+        processedByMCO: 'N',
       };
 
       this.issuerList = [
@@ -129,9 +129,7 @@ export class SubmitEligibilityTransactionsComponent implements OnInit {
     submitKyhInfo(entity: EligibilityTransaction): void {
       console.log(entity);
       this.spinner.show();
-      
-      console.log(this.transactionservice.submit(entity));
-      this.transactionservice
+     this.transactionservice
       .submit(entity)
       .then(result =>
         {
