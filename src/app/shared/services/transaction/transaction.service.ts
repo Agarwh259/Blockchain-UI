@@ -17,6 +17,7 @@ import { Guid } from 'guid-typescript';
   providedIn: 'root'
 })
 export class TransactionService implements TransactionManager, Organization {
+
   orgCode: String;
   orgTitle: String;
   private readonly _logger: LoggerService;
@@ -182,7 +183,7 @@ export class TransactionService implements TransactionManager, Organization {
       dueDate: transaction.dueDate,
       premiumAmount: +transaction.premiumAmount,
       paymentStatus: transaction.paymentStatus,
-      paymentDate: (transaction.paymentDate === undefined)?'':transaction.paymentDate,
+      paymentDate: (transaction.paymentDate === undefined) ? '' : transaction.paymentDate,
       processedByIEES: 'N',
       processedByMCO: 'N'
     };
@@ -290,7 +291,7 @@ export class TransactionService implements TransactionManager, Organization {
     this._logger.Log(Url, Loglevel.Info);
     this._logger.Log(reqBody, Loglevel.Info);
     this._logger.Log(Headers, Loglevel.Info);
-    return this.http.post(url as string, body, { headers: requestHeaders, responseType : 'text' },).
+    return this.http.post(url as string, body, { headers: requestHeaders, responseType : 'text' }, ).
       toPromise();
 
   }
@@ -336,4 +337,79 @@ export class TransactionService implements TransactionManager, Organization {
       .get(url as string, { headers: this.headers, params: requestParams })
       .toPromise();
   }
+
+
+  getPayments(): Promise<any> {
+    this._logger.Log('Inside Get Payments');
+    this.setOrganization('IEES');
+    this.getWebToken();
+    this.setHeaders();
+    const richQuery = JSON.stringify({
+      'selector': {
+        '$and': [
+
+          { 'processedByIEES': 'N' },
+          { 'transactionType': 'Invoice' }
+        ]
+      }
+    });
+
+
+    this._logger.Log(richQuery);
+
+    const params1 = new HttpParams()
+      .set('peer', 'peer0.iees.medicaid.com')
+      .set('fcn', 'GetDataByCustomFilter')
+      .append('args', JSON.stringify([richQuery]));
+      this._logger.Log('parames...');
+      this._logger.Log(params1);
+    return this.queryHyperLedger(
+      this.urlmanager.submitEligibility.toString(),
+      params1
+    );
+  }
+  getEligibility(organization: String): Promise<any> {
+    this._logger.Log('Inside getEligibility ');
+    this.setOrganization(organization);
+    this.getWebToken();
+    this.setHeaders();
+    let node = 'peer0.mco.medicaid.com';
+    let richQuery = JSON.stringify({
+      'selector': {
+        '$and': [
+
+          { 'processedByMCO': 'N' },
+          { 'transactionType': 'Eligibility' }
+        ]
+      }
+    });
+    if (organization === 'MMIS') {
+      node = 'peer0.mmis.medicaid.com';
+      richQuery = JSON.stringify({
+        'selector': {
+          '$and': [
+
+            { 'processedByMMIS': 'N' },
+            { 'transactionType': 'Eligibility' }
+          ]
+        }
+      });
+    }
+
+
+
+    this._logger.Log(richQuery);
+
+    const params1 = new HttpParams()
+      .set('peer', node)
+      .set('fcn', 'GetDataByCustomFilter')
+      .append('args', JSON.stringify([richQuery]));
+      this._logger.Log('parames...');
+      this._logger.Log(params1);
+    return this.queryHyperLedger(
+      this.urlmanager.submitEligibility.toString(),
+      params1
+    );
+  }
+
 }
