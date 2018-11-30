@@ -24,15 +24,15 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
   rawSearchResults = [];
   eligibilityFilteredRecords = [];
   modalTransactionDetails = [];
-  userName:any;
+  userName: any;
 
-  issuerList : Property[];
-  processingStatus : Property[];
+  issuerList: Property[];
+  processingStatus: Property[];
 
-  searchEligibilityEntity : EligibilitySearchTransaction;
+  searchEligibilityEntity: EligibilitySearchTransaction;
 
-  constructor(private data : DataService, private modalService: NgbModal,
-    private spinner: NgxSpinnerService, private transactionService: TransactionService , 
+  constructor(private data: DataService, private modalService: NgbModal,
+    private spinner: NgxSpinnerService, private transactionService: TransactionService ,
     private logger: LoggerService, private _service: NotificationsService ) { }
 
   ngOnInit() {
@@ -44,12 +44,12 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
       maidCardNumber : undefined,
       processedByMMIS : undefined,
       processedByMCO : undefined,
-    }
+    };
 
     this.processingStatus = [
       {id : 'Y', value : 'Yes' },
       {id : 'N', value : 'No' },
-    ]
+    ];
 
     this.issuerList = [
       {id : IssuerType.Aetna, value : IssuerType[IssuerType.Aetna] },
@@ -67,7 +67,7 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
     });
 
     this.modalTransactionDetails = this.eligibilityFilteredRecords.filter(function (el) {
-      return el.transactionId == ClickedTransactionId
+      return el.transactionId === ClickedTransactionId;
     });
 
     this.modalTransactionDetails.forEach(item => {
@@ -86,116 +86,109 @@ export class SearchEligibilityTransactionsComponent implements OnInit {
     item.hidden = true;
   }
 
-  getSearchResults(entity : EligibilitySearchTransaction)
-  {
+  getSearchResults(entity: EligibilitySearchTransaction) {
     this.spinner.show();
     this.showSearchResults = true;
     this.eligibilityFilteredRecords = [];
     this.transactionService.searchEligibility( +entity.caseNumber , 'IEES').then(
 
-      (res) => { this.logger.Log(res, Loglevel.Warning);
+      (res) => {
+        this.logger.Log('Inside Result', Loglevel.Info);
+        this.logger.Log(res, Loglevel.Info);
 
-
+        res.forEach(element => {
           this.eligibilityFilteredRecords.push(
 
             {
-              transactionId: res.transactionId,
-              transactionType : res.transactionType,
-              maidCardNumber: res.maidCardNumber,
-              caseNumber : res.caseNumber,
-              ssn: res.SSN,
-              firstName: res.firstName,
-              lastName: res.lastName,
-              dateOfBirth: res.dateOfBirth,
-              gender: res.gender,
-              addressLine: res.addressLine1,
-              city: res.city,
-              stateCode: res.stateCode,
-              zipCode: res.zipCode,
-              caseCountableIncome: res.caseCountableIncome,
-              programCode: res.programCode,
-              statusCode: res.stateCode,
-              imidCode: res.IMIDCode,
-              eligibilityStartDate: res.eligibilityStartDate,
-              eligibilityEndDate: res.eligibilityEndDate,
-              enrollmentStartDate: res.enrollmentStartDate,
-              enrollmentEndDate : res.enrollmentEndDate,
-              issuerId: res.issuerId,
-              eligibilityType: res.eligibilityType,
-              kyhPlanType: res.KYHplanType,
-              kyhPremiumPlanCode: res.KYHPremiumPlanCode,
-              kyhCopayIndicator: res.KYHCopayIndicator,
-              kyhPregnancyIndicator: res.KYHPregnancyIndicator,
-              kyhIndStartDate: res.KYHIndStartDate,
-              kyhIndEndDate: res.KYHIndEndDate,
-              kyhPremiumAmt: res.KYHPremiumAmt,
-              kyhPremiumStartDate : res.KYHPremiumStartDate,
-              kyhPremiumEndDate : res.KYHPremiumEndDate,
-              processedByMMIS: res.processedByMMIS,
-              processedByMCO: res.processedByMCO
+              transactionId: element.transactionId,
+              transactionType : element.transactionType,
+              maidCardNumber: element.maidCardNumber,
+              caseNumber : element.caseNumber,
+              ssn: element.SSN,
+              firstName: element.firstName,
+              lastName: element.lastName,
+              dateOfBirth: element.dateOfBirth,
+              gender: element.gender,
+              addressLine: element.addressLine1,
+              city: element.city,
+              stateCode: element.stateCode,
+              zipCode: element.zipCode,
+              caseCountableIncome: element.caseCountableIncome,
+              programCode: element.programCode,
+              statusCode: element.stateCode,
+              imidCode: element.IMIDCode,
+              eligibilityStartDate: element.eligibilityStartDate,
+              eligibilityEndDate: element.eligibilityEndDate,
+              enrollmentStartDate: element.enrollmentStartDate,
+              enrollmentEndDate : element.enrollmentEndDate,
+              issuerId: element.issuerId,
+              eligibilityType: element.eligibilityType,
+              kyhPlanType: element.KYHplanType,
+              kyhPremiumPlanCode: element.KYHPremiumPlanCode,
+              kyhCopayIndicator: element.KYHCopayIndicator,
+              kyhPregnancyIndicator: element.KYHPregnancyIndicator,
+              kyhIndStartDate: element.KYHIndStartDate,
+              kyhIndEndDate: element.KYHIndEndDate,
+              kyhPremiumAmt: element.KYHPremiumAmt,
+              kyhPremiumStartDate : element.KYHPremiumStartDate,
+              kyhPremiumEndDate : element.KYHPremiumEndDate,
+              processedByMMIS: element.processedByMMIS,
+              processedByMCO: element.processedByMCO
             }
           );
+          });
+
 
           this.spinner.hide();
 
       }
     ).catch(
 
-      (res) => { this.logger.Log(res, Loglevel.Error); }
+      (res) => {
+        this.logger.Log('Inside Catch', Loglevel.Info);
+        this.logger.Log(res, Loglevel.Error);  this.spinner.hide(); }
     );
 }
 
-SubmitDetails(item){
-  debugger;
-  if(this.userName == 'mco' && item.processedByMCO == 'Y')
-  {
-    if(item.transactionType == 'Eligibility')
-    {
+SubmitDetails(item) {
+
+  if (this.userName === 'mco' && item.processedByMCO === 'Y') {
+    if (item.transactionType === 'Eligibility') {
       this.transactionService
     .updateEligibility(item.caseNumber, this.userName)
-    .then(result =>
-      {
-        this._service.create('Success','"Updated successfully"',NotificationType.Success);
+    .then(result => {
+        this._service.create('Success', '"Updated successfully"', NotificationType.Success);
       })
     .catch(error => {
-      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
+      this._service.create('Error', '"Something went wrong. Please try again!!"', NotificationType.Error);
     });
-    }  
-    else if(item.transactionType == 'Payment')
-    {
+    } else if (item.transactionType === 'Payment') {
       this.transactionService
     .updatePayment(item.caseNumber, this.userName)
-    .then(result =>
-      {
-        this._service.create('Success','"Updated successfully"',NotificationType.Success);
+    .then(result => {
+        this._service.create('Success', '"Updated successfully"', NotificationType.Success);
       })
     .catch(error => {
-      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
+      this._service.create('Error', '"Something went wrong. Please try again!!"', NotificationType.Error);
     });
-    }    
-  }
-  else if(this.userName == 'mmis' && item.processedByMMIS == 'Y')
-  {
+    }
+  } else if (this.userName === 'mmis' && item.processedByMMIS === 'Y') {
     this.transactionService
     .updateEligibility(item.caseNumber, this.userName)
-    .then(result =>
-      {
-        this._service.create('Success','"Updated successfully"',NotificationType.Success);
+    .then(result => {
+        this._service.create('Success', '"Updated successfully"', NotificationType.Success);
       })
     .catch(error => {
-      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
+      this._service.create('Error', '"Something went wrong. Please try again!!"', NotificationType.Error);
     });
-  }
-  else if(this.userName = 'iees' && item.processedByIEES == 'Y')
-  {
+  } else if (this.userName = 'iees' && item.processedByIEES === 'Y') {
     this.transactionService
     .updatePayment(item.caseNumber, this.userName)
-    .then(result =>
-      {
-        this._service.create('Success','"Updated successfully"',NotificationType.Success);
+    .then(result => {
+        this._service.create('Success', '"Updated successfully"', NotificationType.Success);
       })
     .catch(error => {
-      this._service.create('Error','"Something went wrong. Please try again!!"',NotificationType.Error);
+      this._service.create('Error', '"Something went wrong. Please try again!!"', NotificationType.Error);
     });
   }
 }

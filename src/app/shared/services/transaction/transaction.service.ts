@@ -41,10 +41,7 @@ export class TransactionService implements TransactionManager, Organization {
 
   private transactions: Transaction[];
   private _jwtCode: String;
-  private _organization: Organization;
   private headers: HttpHeaders;
-  private contentTypeKey: String = 'Content-Type';
-  private contentTypeValue: String = 'application/json';
   private requestBody: RequestBody;
   /**
    * Calls the blockchain API to add the transaction
@@ -154,15 +151,7 @@ export class TransactionService implements TransactionManager, Organization {
     );
   }
 
-  private getResponse(res: Response) {
-    const body = res.json();
-    return body || {};
-  }
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error);
-    return Promise.reject(error);
-  }
 
   private submitInvoice(transaction: PaymentTransaction): any {
     this.setOrganization('MCO');
@@ -287,7 +276,7 @@ export class TransactionService implements TransactionManager, Organization {
        flag = 'processedByMCO';
          break;
      }
-     
+
      this.requestBody.fcn = 'UpdateF3Request';
      this.requestBody.args = [casenumber.toString(), flag];
 
@@ -307,20 +296,25 @@ export class TransactionService implements TransactionManager, Organization {
   }
 
   searchEligibility(casenumber: Number, organization: String): any {
-    const caseToSearch = JSON.stringify(casenumber);
     this.setOrganization(organization);
     this.getWebToken();
     this.setHeaders();
-    const params = new HttpParams()
+    const richQuery = JSON.stringify({
+      'selector': {
+        'caseNumber': {
+          '$eq': +casenumber
+        }
+      }
+    });
+    this._logger.Log(richQuery);
+
+    const params1 = new HttpParams()
       .set('peer', 'peer0.iees.medicaid.com')
-      .set('fcn', 'QueryForF3Request')
-      .append('args', JSON.stringify([caseToSearch]));
-
-    // this._logger.Log(params, Loglevel.Info);
-
+      .set('fcn', 'GetDataByCustomFilter')
+      .append('args', JSON.stringify([richQuery]));
     return this.queryHyperLedger(
       this.urlmanager.submitEligibility.toString(),
-      params
+      params1
     );
   }
   searchPayment(casenumber: Number, organization: String): any {
@@ -336,8 +330,6 @@ export class TransactionService implements TransactionManager, Organization {
   }
 
   private queryHyperLedger(url: String, requestParams: HttpParams) {
-    const Url = 'Url: ' + url;
-    const Parameters = 'Request Params: ' + JSON.stringify(requestParams);
     // this._logger.Log(Url, Loglevel.Info);
     // this._logger.Log(Parameters, Loglevel.Info);
     return this.http

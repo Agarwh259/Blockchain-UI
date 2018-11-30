@@ -11,6 +11,6 @@ export class LoggerService {
   }
 
   constructor() {
-    ConsoleLogger.LogMessage('Instantiating Logger Service', Loglevel.Info);
+    // ConsoleLogger.LogMessage('Instantiating Logger Service', Loglevel.Info);
   }
 }
