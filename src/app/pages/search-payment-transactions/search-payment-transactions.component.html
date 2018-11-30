@@ -63,7 +63,7 @@
             <th>Premium Amount</th>
             <th>Processed By IEES</th>
             <th>Transaction Id</th>
-            <th>Create Date</th>
+            <!-- <th>Create Date</th> -->
         </tr>
     </thead>
     <tbody>
@@ -79,14 +79,14 @@
                 {{txn.premiumAmount | currency}}
             </td>
             <td>
-                {{txn.processedByIEES?'Yes':'No'}}
+                {{txn.processedByIEES==='Y'?'Yes':'No'}}
             </td>
             <td>
                 {{txn.transactionId}}
             </td>
-            <td>
+            <!-- <td>
                 {{txn.createDate | date: 'dd/MM/yyyy'}}
-            </td>
+            </td> -->
         </tr>
     </tbody>
 </table>
@@ -240,7 +240,7 @@
                                                 <td><small><b>Processed By MMIS</b></small></td>
                                                 <td style="text-align: center">
                                                     <small>
-                                                        <input [disabled]="(userName==='mmis'?false:true) || (item.processedByMMIS == 'Y')" type="checkbox" [checked]="item.processedByMMIS=='Y'?true:false" (change)="item.processedByMMIS = !item.processedByMMIS" />
+                                                        <input [disabled]="(userName ==='mmis' && item.processedByMMIS === 'N')?false:true" type="checkbox" [checked]="item.processedByMMIS=='Y'?true:false" (change)="item.processedByMMIS = !item.processedByMMIS" />
                                                     </small>
                                                 </td>
                                             </tr>
@@ -248,7 +248,7 @@
                                                 <td><small><b>Processed By MCO</b></small></td>
                                                 <td style="text-align: center">
                                                     <small>
-                                                        <input [disabled]="(userName==='mco'?false:true) || (item.processedByMCO == 'Y')" type="checkbox" [checked]="item.processedByMCO=='Y'?true:false" (change)="item.processedByMCO = !item.processedByMCO" />
+                                                        <input [disabled]="(userName ==='mco' && item.processedByMCO === 'N')?false:true" type="checkbox" [checked]="item.processedByMCO=='Y'?true:false" (change)="item.processedByMCO = !item.processedByMCO" />
                                                     </small>
                                                 </td>
                                             </tr>
@@ -293,8 +293,8 @@
                                         <td><small><b>Processed By IEES</b></small></td>
                                         <td style="text-align: center">
                                             <small>
-                                                <input type="checkbox" [disabled]="(userName==='iees'?false:true) || (item.processedByIEES == 'Y')" [checked]="item.processedByIEES == 'Y'?true:false"
-                                                    (change)="item.processedByIEES = !item.ProcessedByIEES" />
+                                                <input type="checkbox" [disabled]="(userName ==='iees' && item.processedByIEES === 'N')?false:true" [checked]="item.processedByIEES == 'Y'?true:false"
+                                                            (change)="item.processedByIEES = (item.processedByIEES == 'Y')?'N':'Y'" />
                                             </small>
                                         </td>
                                     </tr>
@@ -348,8 +348,8 @@
                                         <td><small><b>Processed By IEES</b></small></td>
                                         <td style="text-align: center">
                                             <small>
-                                                <input type="checkbox" [disabled]="(userName==='iees'?false:true) || (item.processedByIEES == 'Y')" [checked]="item.processedByIEES == 'Y' ?true:false"
-                                                    (change)="item.processedByIEES = !item.ProcessedByIEES" />
+                                                <input type="checkbox" [disabled]="(userName ==='iees' && item.processedByIEES === 'N')?false:true" [checked]="item.processedByIEES == 'Y' ?true:false"
+                                                            (change)="item.processedByIEES = (item.processedByIEES == 'Y')?'N':'Y'" />
                                             </small>
                                         </td>
                                     </tr>
@@ -362,7 +362,7 @@
                             More</a>
                         <a [hidden]="item.hidden" class="Pointer smallButton" (click)="HideDetails(item)">View Less</a>
                         <br>
-                        <button [hidden]="item.hidden" class="btn btn-info btn-sm" (click)="HideDetails(item)" style="margin-top: 35%">Submit</button>
+                        <button [hidden]="item.hidden" class="btn btn-info btn-sm" (click)="HideDetails(item); SubmitDetails(item)" style="margin-top: 35%">Submit</button>
                     </td>
                 </tr>
             </tbody>
