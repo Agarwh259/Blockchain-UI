@@ -218,10 +218,10 @@ export class TransactionService implements TransactionManager, Organization {
    * @param transaction that needs to be updated
    */
   updatePayment(casenumber: Number, organization: String, paymentDate?: Date): any {
-    organization = organization.toUpperCase();
     this.setOrganization(organization);
     this.getWebToken();
 
+    console.log(organization);
 
     // Construct the request header
 
@@ -240,7 +240,14 @@ export class TransactionService implements TransactionManager, Organization {
      }
 
      this.requestBody.fcn = 'UpdateInvoiceAndPayment';
-     this.requestBody.args = [casenumber.toString(), flag];
+     if(flag === 'processedByMCO' && paymentDate !== undefined)
+     {
+      this.requestBody.args = [casenumber.toString(), flag, paymentDate];
+     }
+     else
+     {   
+         this.requestBody.args = [casenumber.toString(), flag];
+     }
      return this.callHyperLedger(this.urlmanager.submitPayment.toString(), this.requestBody, this.headers );
   }
 

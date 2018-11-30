@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { routing } from './submit-payment-transactions.routing';
 import { SharedModule } from '../../shared/shared.module';
 import { SubmitPaymentTransactionsComponent } from './submit-payment-transactions.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { SubmitPaymentTransactionsComponent } from './submit-payment-transaction
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        routing
+        routing,
+        SimpleNotificationsModule.forRoot()
     ],
     declarations: [
         SubmitPaymentTransactionsComponent    ]

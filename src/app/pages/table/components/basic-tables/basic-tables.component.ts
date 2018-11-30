@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../../../../shared/services/data.service';
 import { TransactionService } from 'src/app/shared/services/transaction/transaction.service';
 import { LoggerService } from 'src/app/shared/services/logging/logger.service';
+import { element } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-basic-tables',
@@ -15,7 +16,7 @@ export class BasicTablesComponent implements OnInit {
   default_iees_data: Array<any>;
   userName: any;
   modalTransactionDetails = [];
-  dummyData = [];
+  filteredData = [];
 
   constructor(
     private data: DataService,
@@ -26,42 +27,152 @@ export class BasicTablesComponent implements OnInit {
 
   ngOnInit() {
     this.userName = sessionStorage.getItem('Role').toLowerCase();
-    this.transactionservice
+    let role = this.userName;
+
+    if(role === 'iees')
+    {
+      this.filteredData = [];
+
+      this.transactionservice
       .getPayments()
       .then(result => {
-        this.logger.Log('Insider Result');
+        this.logger.Log('Inside Result');
         this.logger.Log(result);
+
+        result.forEach(element => {
+          this.filteredData.push({
+            transactionId : element.transactionId,
+            transactionType : element.transactionType,
+            caseNumber : element.caseNumber,
+            coverageMonth: element.coverageMonth,
+            issuerId: element.issuerId,
+            invoiceDate: element.invoiceDate,
+            dueDate: element.dueDate,
+            premiumAmount: element.premiumAmount,
+            paymentStatus: element.paymentStatus,
+            paymentDate : element.paymentDate,
+            processedByIEES: element.processedByIEES,
+            processedByMCO: element.processedByMCO
+          });
+        });
+       
       })
       .catch(err => {
-        this.logger.Log('Insider Error');
+        this.logger.Log('Inside Error');
         this.logger.Log(err);
       });
-    this.transactionservice
+    }
+    
+    if(role === 'mmis')
+    {
+      this.filteredData = [];
+      this.transactionservice
       .getEligibility('MMIS')
       .then(result => {
-        this.logger.Log('Insider Eligibility Result');
+        this.logger.Log('Inside Eligibility Result');
         this.logger.Log(result);
+
+        result.forEach(element => {
+          
+          this.filteredData.push(
+            {
+              transactionId: element.transactionId,
+              transactionType : element.transactionType,
+              maidCardNumber: element.maidCardNumber,
+              caseNumber : element.caseNumber,
+              ssn: element.SSN,
+              firstName: element.firstName,
+              lastName: element.lastName,
+              dateOfBirth: element.dateOfBirth,
+              gender: element.gender,
+              addressLine: element.addressLine1,
+              city: element.city,
+              stateCode: element.stateCode,
+              zipCode: element.zipCode,
+              caseCountableIncome: element.caseCountableIncome,
+              programCode: element.programCode,
+              statusCode: element.stateCode,
+              imidCode: element.IMIDCode,
+              eligibilityStartDate: element.eligibilityStartDate,
+              eligibilityEndDate: element.eligibilityEndDate,
+              enrollmentStartDate: element.enrollmentStartDate,
+              enrollmentEndDate : element.enrollmentEndDate,
+              issuerId: element.issuerId,
+              eligibilityType: element.eligibilityType,
+              kyhPlanType: element.KYHplanType,
+              kyhPremiumPlanCode: element.KYHPremiumPlanCode,
+              kyhCopayIndicator: element.KYHCopayIndicator,
+              kyhPregnancyIndicator: element.KYHPregnancyIndicator,
+              kyhIndStartDate: element.KYHIndStartDate,
+              kyhIndEndDate: element.KYHIndEndDate,
+              kyhPremiumAmt: element.KYHPremiumAmt,
+              kyhPremiumStartDate : element.KYHPremiumStartDate,
+              kyhPremiumEndDate : element.KYHPremiumEndDate,
+              processedByMMIS: element.processedByMMIS,
+              processedByMCO: element.processedByMCO
+            });
+
+        });
       })
       .catch(err => {
-        this.logger.Log('Insider Eligibility Error');
+        this.logger.Log('Inside Eligibility Error');
         this.logger.Log(err);
       });
-    if (this.userName === 'mmis') {
-      this.dummyData = this.data.getEligibilityData().filter(function(el) {
-        return el.processedByMMIS === 'N';
-      });
     }
-    if (this.userName === 'mco') {
-      this.dummyData = this.data.getEligibilityData().filter(function(el) {
-        return el.processedByMCO === 'N' && el.processedByMMIS === 'Y';
-      });
-    }
-    if (this.userName === 'iees') {
-      this.dummyData = this.data
-        .getInvoiceAndPaymentData()
-        .filter(function(el) {
-          return el.processedByIEES === 'N';
+    if(role === 'mco')
+    {
+      this.transactionservice
+      .getEligibility('MCO')
+      .then(result => {
+        this.logger.Log('Inside Eligibility Result');
+        this.logger.Log(result);
+
+        result.forEach(element => {
+          
+          this.filteredData.push(
+            {
+              transactionId: element.transactionId,
+              transactionType : element.transactionType,
+              maidCardNumber: element.maidCardNumber,
+              caseNumber : element.caseNumber,
+              ssn: element.SSN,
+              firstName: element.firstName,
+              lastName: element.lastName,
+              dateOfBirth: element.dateOfBirth,
+              gender: element.gender,
+              addressLine: element.addressLine1,
+              city: element.city,
+              stateCode: element.stateCode,
+              zipCode: element.zipCode,
+              caseCountableIncome: element.caseCountableIncome,
+              programCode: element.programCode,
+              statusCode: element.stateCode,
+              imidCode: element.IMIDCode,
+              eligibilityStartDate: element.eligibilityStartDate,
+              eligibilityEndDate: element.eligibilityEndDate,
+              enrollmentStartDate: element.enrollmentStartDate,
+              enrollmentEndDate : element.enrollmentEndDate,
+              issuerId: element.issuerId,
+              eligibilityType: element.eligibilityType,
+              kyhPlanType: element.KYHplanType,
+              kyhPremiumPlanCode: element.KYHPremiumPlanCode,
+              kyhCopayIndicator: element.KYHCopayIndicator,
+              kyhPregnancyIndicator: element.KYHPregnancyIndicator,
+              kyhIndStartDate: element.KYHIndStartDate,
+              kyhIndEndDate: element.KYHIndEndDate,
+              kyhPremiumAmt: element.KYHPremiumAmt,
+              kyhPremiumStartDate : element.KYHPremiumStartDate,
+              kyhPremiumEndDate : element.KYHPremiumEndDate,
+              processedByMMIS: element.processedByMMIS,
+              processedByMCO: element.processedByMCO
+            });
+
         });
+      })
+      .catch(err => {
+        this.logger.Log('Inside Eligibility Error');
+        this.logger.Log(err);
+      });
     }
   }
 
@@ -70,7 +181,7 @@ export class BasicTablesComponent implements OnInit {
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(result => {}, reason => {});
 
-    this.modalTransactionDetails = this.dummyData.filter(function(el) {
+    this.modalTransactionDetails = this.filteredData.filter(function(el) {
       return el.transactionId === ClickedTransactionId;
     });
 
@@ -106,7 +217,7 @@ export class BasicTablesComponent implements OnInit {
           });
       } else if (item.transactionType === 'Payment') {
         this.transactionservice
-          .updatePayment(item.caseNumber, this.userName)
+          .updatePayment(item.caseNumber, 'MCO')
           .then(result => {
             console.log(result);
             console.log(result.status);
@@ -129,7 +240,7 @@ export class BasicTablesComponent implements OnInit {
         });
     } else if ((this.userName = 'iees' && item.processedByIEES === 'Y')) {
       this.transactionservice
-        .updatePayment(item.caseNumber, this.userName)
+        .updatePayment(item.caseNumber, 'IEES')
         .then(result => {
           console.log(result);
           console.log(result.status);

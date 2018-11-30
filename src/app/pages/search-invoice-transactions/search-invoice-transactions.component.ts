@@ -134,7 +134,7 @@ SubmitDetails(item)
     if(item.transactionType === 'Invoice')
     {
       console.log(item);
-      this.transactionService.updatePayment(item.caseNumber, this.userName)
+      this.transactionService.updatePayment(item.caseNumber, 'IEES')
       .then(result =>
         {
           console.log(result);
