@@ -55,14 +55,14 @@ export class BasicTablesComponent implements OnInit {
             processedByMCO: element.processedByMCO
           });
         });
-       
+
       })
       .catch(err => {
         this.logger.Log('Inside Error');
         this.logger.Log(err);
       });
     }
-    
+
     if(role === 'mmis')
     {
       this.filteredData = [];
@@ -73,7 +73,7 @@ export class BasicTablesComponent implements OnInit {
         this.logger.Log(result);
 
         result.forEach(element => {
-          
+
           this.filteredData.push(
             {
               transactionId: element.transactionId,
@@ -119,6 +119,9 @@ export class BasicTablesComponent implements OnInit {
         this.logger.Log(err);
       });
     }
+
+   // this.getBlockChainData();
+
     if(role === 'mco')
     {
       this.transactionservice
@@ -128,7 +131,7 @@ export class BasicTablesComponent implements OnInit {
         this.logger.Log(result);
 
         result.forEach(element => {
-          
+
           this.filteredData.push(
             {
               transactionId: element.transactionId,
@@ -174,6 +177,30 @@ export class BasicTablesComponent implements OnInit {
         this.logger.Log(err);
       });
     }
+  }
+  getBlockChainData(): any {
+
+    this.transactionservice.getAllEligibility().
+    then((result) => {
+
+
+      this.logger.Log('Insider get all eligibility result');
+      this.logger.Log(result);
+
+      const mco_pe_count =  result.filter(tran => tran.processedByMCO === 'N').length;
+      this.logger.Log(mco_pe_count);
+
+      const mmis_pe_count =  result.filter(tran => tran.processedByMMIS === 'N').length;
+      this.logger.Log(mmis_pe_count);
+    } )
+    .catch( (err) => {
+
+      this.logger.Log('Insider get all eligibility error');
+      this.logger.Log(err);
+
+    });
+
+
   }
 
   openModal(content, ClickedTransactionId) {

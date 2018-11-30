@@ -9,5 +9,8 @@ export interface TransactionManager {
     updateEligibility(casenumber: Number, organization: String, paymentDate?: Date): Boolean;
     getPayments(): Promise<any>;
     getEligibility(organization: String): Promise<any>;
+    getAllEligibility(): Promise<any>;
+    getAllInvoices(): Promise<any>;
+    getAllPayments(): Promise<any>;
 
 }
