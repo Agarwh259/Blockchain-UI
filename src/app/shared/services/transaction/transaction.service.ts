@@ -265,7 +265,8 @@ export class TransactionService implements TransactionManager, Organization {
     this.headers = new HttpHeaders()
       .set('Authorization', ('Bearer ' + this._jwtCode) as string)
       .set('Content-Type', 'application/json')
-      .set('Access-Control-Allow-Credentials', 'true');
+      .set('Access-Control-Allow-Credentials', 'true')
+      .set('Access-Control-Allow-Origin','https://blockchain-medicaid-ui.azurewebsites.net');
   }
 
   /**

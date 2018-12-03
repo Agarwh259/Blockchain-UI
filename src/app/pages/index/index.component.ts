@@ -14,7 +14,7 @@ export class IndexComponent implements OnInit {
 
 
 
-  eligibilityChartData: number[] = [10, 10, 10];
+  eligibilityChartData: number[] = [10,10,10];
   invoiceChartData: number[] = [10, 10];
   paymentChartData: number[] = [10, 10];
 
@@ -23,9 +23,9 @@ export class IndexComponent implements OnInit {
   paymentData: TransactionData;
 
   //graph labels
-  public eligibilityChartLabel: string[] = ['Total Transactions', 'Pending by MCO', 'Pending by MMIS']
-  public invoiceChartLabel: string[] = ['Total Transactions', 'Pending by IEES'];
-  public paymentChartLabel: string[] = ['Total Transactions', 'Pending by IEES'];
+  public eligibilityChartLabel: string[] = ['Processed By MMIS & MCO', 'Pending by MCO', 'Pending by MMIS']
+  public invoiceChartLabel: string[] = ['Processed By IEES', 'Pending by IEES'];
+  public paymentChartLabel: string[] = ['Processed By IEES', 'Pending by IEES'];
 
   //  // events
   //  public chartClicked(e:any):void {
@@ -72,7 +72,9 @@ export class IndexComponent implements OnInit {
         console.log("inside then");
         console.log(result);
 
-        this.eligibilityData.totalTransactions = result.length;
+        this.eligibilityData.totalTransactions = result.filter(function (el) {
+          return (el.processedByMCO === 'Y' && el.processedByMMIS ==='Y');
+        }).length;
         this.eligibilityData.mcoPendingTransaction = result.filter(function (el) {
           return el.processedByMCO === 'N';
         }).length;
@@ -96,7 +98,9 @@ export class IndexComponent implements OnInit {
     this._transactionservice
       .getAllPayments()
       .then(result => {
-        this.paymentData.totalTransactions = result.length;
+        this.paymentData.totalTransactions = result.filter(function (el) {
+          return el.processedByIEES === 'Y';
+        }).length;
         this.paymentData.ieesPendingTransaction = result.filter(function (el) {
           return el.processedByIEES === 'N'
         }).length;
@@ -115,7 +119,9 @@ export class IndexComponent implements OnInit {
     this._transactionservice
       .getAllInvoices()
       .then(result => {
-        this.invoiceData.totalTransactions = result.length;
+        this.invoiceData.totalTransactions = result.filter(function (el) {
+          return el.processedByIEES === 'Y';
+        }).length;
         this.invoiceData.ieesPendingTransaction = result.filter(function (el) {
           return el.processedByIEES === 'N'
         }).length;
