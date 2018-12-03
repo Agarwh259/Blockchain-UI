@@ -266,7 +266,7 @@ export class TransactionService implements TransactionManager, Organization {
       .set('Authorization', ('Bearer ' + this._jwtCode) as string)
       .set('Content-Type', 'application/json')
       .set('Access-Control-Allow-Credentials', 'true')
-      .set('Access-Control-Allow-Origin','https://blockchain-medicaid-ui.azurewebsites.net');
+      .set('Access-Control-Allow-Origin','https://blockchain-ui.azurewebsites.net');
   }
 
   /**
@@ -337,9 +337,8 @@ export class TransactionService implements TransactionManager, Organization {
     this.setHeaders();
     const richQuery = JSON.stringify({
       selector: {
-        caseNumber: {
-          $eq: +casenumber
-        }
+        $and: [{ caseNumber: +casenumber }, { transactionType: 'Eligibility' }]
+       
       }
     });
     this._logger.Log(richQuery);

@@ -4,7 +4,7 @@
       <div style="display: block">
         <p style="margin-left:25%">Total Eligibility Transactions</p>
         <canvas baseChart [data]="eligibilityChartData" [labels]="eligibilityChartLabel" [chartType]="doughnutChartType"
-          (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+          (chartHover)="chartHovered($event)">
         </canvas>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <div style="display: block">
         <p style="margin-left:25%">Total Payment Transactions</p>
         <canvas baseChart [data]="paymentChartData" [labels]="paymentChartLabel" [chartType]="doughnutChartType"
-          (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+          (chartHover)="chartHovered($event)"></canvas>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
       <div style="display: block">
         <p style="margin-left:25%">Total Invoice Transactions</p>
         <canvas baseChart [data]="invoiceChartData" [labels]="invoiceChartLabel" [chartType]="doughnutChartType"
-          (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+          (chartHover)="chartHovered($event)"></canvas>
       </div>
     </div>
   </div>
