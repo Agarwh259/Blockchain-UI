@@ -295,7 +295,7 @@
                   </label>
                   <select required class="form-control col-md-6" name="gender" [(ngModel)]="eligibilityEntity.eligibilityType"
                      #elgTypeControl="ngModel" [ngClass]="{ 'is-invalid': f2.submitted && elgTypeControl.invalid }">
-                     <option *ngFor="let item of processingStatus" [value]="item.id">
+                     <option *ngFor="let item of eligibilityType" [value]="item.id">
                         {{item.value}}
                      </option>
                   </select>
