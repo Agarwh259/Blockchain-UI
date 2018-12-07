@@ -38,7 +38,7 @@ export class SubmitInvoiceTransactionsComponent implements OnInit {
       transactionType : TransactionType.Invoice,
       caseNumber : undefined,
       coverageMonth : undefined,
-      issuerId : 70003,
+      issuerId : undefined,
       invoiceDate : undefined,
       dueDate : undefined,
       premiumAmount : 1.00,

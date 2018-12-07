@@ -266,7 +266,7 @@ export class TransactionService implements TransactionManager, Organization {
       .set('Authorization', ('Bearer ' + this._jwtCode) as string)
       .set('Content-Type', 'application/json')
       .set('Access-Control-Allow-Credentials', 'true')
-      .set('Access-Control-Allow-Origin','https://blockchain-ui.azurewebsites.net');
+      .set('Access-Control-Allow-Origin', 'https://blockchain-ui.azurewebsites.net');
   }
 
   /**
@@ -338,7 +338,7 @@ export class TransactionService implements TransactionManager, Organization {
     const richQuery = JSON.stringify({
       selector: {
         $and: [{ caseNumber: +casenumber }, { transactionType: 'Eligibility' }]
-       
+
       }
     });
     this._logger.Log(richQuery);
@@ -352,17 +352,54 @@ export class TransactionService implements TransactionManager, Organization {
       params1
     );
   }
+
+  //search payment transactions
   searchPayment(casenumber: Number, organization: String): any {
     const caseToSearch = JSON.stringify(casenumber);
     this.setOrganization(organization);
     this.getWebToken();
     this.setHeaders();
+
+    const richQuery = JSON.stringify({
+      selector: {
+        $and: [{ caseNumber: +casenumber }, { transactionType: 'Payment' }]
+
+      }
+    });
+    this._logger.Log(richQuery);
     const params = new HttpParams()
       .set('peer', 'peer0.mco.medicaid.com')
-      .set('fcn', 'QueryInvoice')
-      .append('args', JSON.stringify([caseToSearch]));
-    return this.queryHyperLedger(this.urlmanager.baseUrl.toString(), params);
+      .set('fcn', 'GetDataByCustomFilter')
+      .append('args', JSON.stringify([richQuery]));
+
+    return this.queryHyperLedger(
+      this.urlmanager.baseUrl.toString(), params
+    );
   }
+
+  //search invoice transactions
+  searchInvoice(casenumber: Number, organization: String): any {
+    const caseToSearch = JSON.stringify(casenumber);
+    this.setOrganization(organization);
+    this.getWebToken();
+    this.setHeaders();
+    const richQuery = JSON.stringify({
+      selector: {
+        $and: [{ caseNumber: +casenumber }, { transactionType: 'Invoice' }]
+
+      }
+    });
+    this._logger.Log(richQuery);
+    const params = new HttpParams()
+      .set('peer', 'peer0.mco.medicaid.com')
+      .set('fcn', 'GetDataByCustomFilter')
+      .append('args', JSON.stringify([richQuery]));
+
+    return this.queryHyperLedger(
+      this.urlmanager.baseUrl.toString(), params
+    );
+  }
+
 
   private queryHyperLedger(url: String, requestParams: HttpParams) {
     // this._logger.Log(Url, Loglevel.Info);

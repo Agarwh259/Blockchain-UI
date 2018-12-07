@@ -94,26 +94,36 @@ export class SearchPaymentTransactionsComponent implements OnInit {
 
     this.transactionService.searchPayment(+entity.caseNumber , 'MCO')
     .then(
-      (res) => { this.logger.Log(res, Loglevel.Warning);
-        this.paymentFilteredRecords.push(
-          {
-            transactionId : res.transactionId,
-            transactionType : res.transactionType,
-            caseNumber : res.caseNumber,
-            coverageMonth: res.coverageMonth,
-            issuerId: res.issuerId,
-            invoiceDate: res.invoiceDate,
-            dueDate: res.dueDate,
-            premiumAmount: res.premiumAmount,
-            paymentStatus: res.paymentStatus,
-            paymentDate : res.paymentDate,
-            processedByIEES: res.processedByIEES,
-            processedByMCO: res.processedByMCO
-          }         
-        );
-        
-        this.spinner.hide();
+      (res) => 
+      { 
+        { 
+          this.logger.Log(res, Loglevel.Warning);
+          res.forEach(element => {
+            this.paymentFilteredRecords.push(
+  
+              {
+                transactionId: element.transactionId,
+                transactionType : element.transactionType,
+                caseNumber : element.caseNumber,
+                coverageMonth: element.coverageMonth,
+                dueDate: element.dueDate,
+                issuerId: element.issuerId,
+                invoiceDate: element.invoiceDate,
+                paymentDate: element.paymentDate,
+                paymentStatus: element.paymentStatus,
+                premiumAmount: element.premiumAmount,
+                processedByIEES: element.processedByIEES,
+                processedByMCO: element.processedByMCO
+              }
+            );
+            });
+  
+  
+            this.spinner.hide();
+            console.log(this.paymentFilteredRecords);
+  
         }
+      }
     )
     .catch(
       (res) => { 

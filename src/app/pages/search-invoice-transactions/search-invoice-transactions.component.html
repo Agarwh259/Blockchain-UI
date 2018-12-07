@@ -77,7 +77,8 @@
                 {{txn.premiumAmount | currency}}
             </td>
             <td>
-                {{txn.processedByIEES==='Y'?'Yes':'No'}}
+                {{txn.processedByIEES==='Y'?'Yes': (txn.processedByIEES !== undefined && txn.processedByIEES ==='N')?'No' : undefined}}
+           
             </td>
             <td>
                 {{txn.transactionId}}
