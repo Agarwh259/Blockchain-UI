@@ -25,7 +25,7 @@
 }
 
 .fixedHeightModalTableRows{
-    max-height: 100px; 
+    max-height: 150px; 
     overflow-y:auto; 
     display: block;
     
@@ -35,3 +35,10 @@
         font-family:'roboto-condensed', 'Microsoft Yahei';
         font-size: 14px;
     }
+
+    .modal-tall .modal-dialog {
+        height: 90%;
+      }
+      .modal-tall .modal-content {
+        height: 100%;
+      }
